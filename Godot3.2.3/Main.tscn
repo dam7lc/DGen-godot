@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Unit.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://Player.gd" type="Script" id=2]
+
+[sub_resource type="BoxShape" id=1]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Player" type="KinematicBody" parent="."]
+script = ExtResource( 2 )
+
+[node name="Unit" type="MeshInstance" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0 )
+mesh = ExtResource( 1 )
+material/0 = null
+
+[node name="SpringArm" type="SpringArm" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0 )
+spring_length = 20.0
+
+[node name="Camera" type="Camera" parent="Player/SpringArm"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0222187, -0.00304699, 20.0053 )
+current = true
+
+[node name="SpringArmFP" type="SpringArm" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.886, 0.473 )
+spring_length = 0.0
+
+[node name="CameraFP" type="Camera" parent="Player/SpringArmFP"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Player"]
+transform = Transform( 0.465586, 0, 0, 0, 1, 0, 0, 0, 0.448027, 0.563993, 0.461321, -0.485893 )
+shape = SubResource( 1 )
+
+[node name="Unit" type="MeshInstance" parent="."]
+transform = Transform( 50, 0, 0, 0, 1, 0, 0, 0, 50, 0, -1, 0 )
+mesh = ExtResource( 1 )
+material/0 = null
+
+[node name="Unit2" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.797, 0.858, -5.344 )
+mesh = ExtResource( 1 )
+material/0 = null
+
+[node name="Unit3" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85379, 4.76837e-07, -3.2038 )
+mesh = ExtResource( 1 )
+material/0 = null
