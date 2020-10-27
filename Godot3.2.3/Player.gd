@@ -7,7 +7,8 @@ var springArm
 var isTP = false
 var isFP = false
 var prevtime = 0
-
+var player_mesh
+var space_state
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -26,6 +27,7 @@ func _ready():
 		camera = $SpringArm/Camera
 		springArm = $SpringArm
 		springArm.add_excluded_object(.get_rid())
+		player_mesh = $Unit
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
@@ -68,25 +70,16 @@ func _input(event):
 			rotate_x(-rot_y)
 			rotate_y(-rot_x)
 	elif event is InputEventMouseMotion and (!isTP and !isFP):
-		var median_x = get_viewport().size.x/2
-		var median_y = get_viewport().size.y/2
-		var median_vector = Vector2(median_x, median_y)
-		var new_vector = median_vector - event.position
-		new_vector = Vector2(-new_vector.x, new_vector.y)
-		#print(new_vector.angle())
+		var from = camera.project_ray_origin(event.position)
+		var to = from + camera.project_ray_normal(event.position) * 5000 	
 		
-		$Unit.transform.basis = Basis(Vector3(0, 1, 0), new_vector.angle()) 
+		if(space_state):
+			var ignore = Array()
+			ignore.append(.get_rid())
+			var result = space_state.intersect_ray(from, to, ignore)
+			if(result):
+				player_mesh.look_at(Vector3(result.position.x, .45, result.position.z), Vector3(0,1,0))
 		
-#		if event.position.x > median_x:
-#			print("Derecha")
-#		elif event.position.x < median_x: 
-#			print("Izquierda")
-#		if event.position.y > median_y:
-#			print("Arriba")
-#		elif event.position.y < median_y:
-#			print("Abajo")
-		#print("normal", event.position)
-		#print("global", event.global_position)
 		
 	if Input.is_action_pressed("change_camera"):
 		var time = OS.get_ticks_msec()
@@ -118,7 +111,8 @@ func _input(event):
 func _physics_process(delta):
 	process_input(delta)
 	process_movement(delta)
-
+	space_state = get_world().direct_space_state
+	
 func process_input(delta):
 	dir = Vector3()
 	var cam_xform = camera.get_global_transform()
