@@ -2,8 +2,20 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <cmath>
+#include <iomanip>
+#include <limits>
 
 using namespace std;
+
+string decimal_a_base(int base, int numero); //Funcion que se encarga de la conversion de decimal a cualquier base
+int base_a_decimal(int base, int numero); //Funcion que se encarga de la conversion de cualquier base a decimal
+int hex_a_dec(string str_numero); //Funcion que se encarga de la conversion de hexadecimal a decimal
+void convertir_unidades(int numero); //Funcion que realiza la conversion de unidades utilizando el valor DECIMAL !!
+float prefijo_mayor(float numero); //Funcion que obtiene el valor en el prefijo inmediato mayor (ej, megas a gigas)
+float prefijo_menor(float numero); //Funcion que obtiene el valor en el prefijo inmediato menor (ej, gigas a megas)
+float a_bytes(float bits); // Funcion que convierte de bits a bytes
+float a_bits(float bytes); // Funcion que convierte de bytes a bits
 
 int main() {
     while (1) {
@@ -20,15 +32,12 @@ int main() {
         string quinario;
         string hexadecimal;
 
-        string decimal_a_base(int base, int numero); //Funcion que se encarga de la conversion de decimal a cualquier base
-        int base_a_decimal(int base, int numero); //Funcion que se encarga de la conversion de cualquier base a decimal
-        int hex_a_dec(string str_numero); //Funcion que se encarga de la conversion de hexadecimal a decimal
-
-
+        
+       
         //Se pide y checa que el numero sea valido 
         while (1)
         {
-            cout << "Ingresa el numero: " << endl;
+            cout << endl << "Ingresa el numero: " << endl;
             bPuedeSerBinario = true;
             bPuedeSerOctal = true;
             bPuedeSerQuinario = true;
@@ -68,7 +77,7 @@ int main() {
                 break; //Si el numero es valido se deja de solicitar un numero valido
             }
             else {
-                cout << "Error, Ingresa un numero valido" << endl; //Se identificó que es invalido y se vuelve a solicitar
+                cout << "Error, Ingresa un numero valido" << endl; //Se identificï¿½ que es invalido y se vuelve a solicitar
             }
         }
 
@@ -76,7 +85,7 @@ int main() {
 
         if (!bEsHexadecimal) { //Si no es hexadecimal se procede a solicitar que el usuario seleccione la base
             if (!bPuedeSerOctal) { //Si no puede ser octal entonces tampoco puede ser quinario ni binario 
-                cout << "Ingresa la opcion que corresponde a la base del numero: " << endl;
+                cout << endl << "Ingresa la opcion que corresponde a la base del numero: " << endl;
                 cout << "3) Base 10 (Decimal)" << endl;
                 cout << "5) Base 16 (Hexadecimal)" << endl;
                 while (1) //Se verifica que el numero ingresado sea valido
@@ -91,7 +100,7 @@ int main() {
                 }
             }
             else if (!bPuedeSerQuinario) { //Si no puede ser quinario se quita el binario y el qinario
-                cout << "Ingresa la opcion que corresponde a la base del numero: " << endl;
+                cout << endl << "Ingresa la opcion que corresponde a la base del numero: " << endl;
                 cout << "2) Base 8 (Octal)" << endl;
                 cout << "3) Base 10 (Decimal)" << endl;
                 cout << "5) Base 16 (Hexadecimal)" << endl;
@@ -107,7 +116,7 @@ int main() {
                 }
             }
             else if (!bPuedeSerBinario) { //Si no puede ser binario se quita esa opcion para evitar errores
-                cout << "Ingresa la opcion que corresponde a la base del numero: " << endl;
+                cout << endl << "Ingresa la opcion que corresponde a la base del numero: " << endl;
                 cout << "1) Base 5 (Quinario)" << endl;
                 cout << "2) Base 8 (Octal)" << endl;
                 cout << "3) Base 10 (Decimal)" << endl;
@@ -126,7 +135,7 @@ int main() {
 
 
             else { //Si puede ser binario se incluye la opcion 
-                cout << "Ingresa la opcion que corresponde a la base del numero: " << endl;
+                cout << endl << "Ingresa la opcion que corresponde a la base del numero: " << endl;
                 cout << "1) Base 5 (Quinario)" << endl;
                 cout << "2) Base 8 (Octal)" << endl;
                 cout << "3) Base 10 (Decimal)" << endl;
@@ -171,6 +180,7 @@ int main() {
             cout << numero << " quinario a octal es igual a " << octal << endl;
             cout << numero << " quinario a binario es igual a " << binario << endl;
             cout << numero << " quinario a hexadecimal es igual a " << hexadecimal << endl;
+            convertir_unidades(decimal);
             break;
         case 2: //Octal
             decimal = base_a_decimal(8, numero);
@@ -181,6 +191,7 @@ int main() {
             cout << numero << " octal a quinario es igual a " << quinario << endl;
             cout << numero << " octal a binario es igual a " << binario << endl;
             cout << numero << " octal a hexadecimal es igual a " << hexadecimal << endl;
+            convertir_unidades(decimal);
             break;
         case 3: //Decimal
             octal = decimal_a_base(8, numero);
@@ -191,6 +202,7 @@ int main() {
             cout << numero << " decimal a quinario es igual a " << quinario << endl;
             cout << numero << " decimal a binario es igual a " << binario << endl;
             cout << numero << " decimal a hexadecimal es igual a " << hexadecimal << endl;
+            convertir_unidades(decimal);
             break;
         case 4: //Binario
             decimal = base_a_decimal(2, numero);
@@ -201,6 +213,7 @@ int main() {
             cout << numero << " binario a quinario es igual a " << quinario << endl;
             cout << numero << " binario a octal es igual a " << octal << endl;
             cout << numero << " binario a hexadecimal es igual a " << hexadecimal << endl;
+            convertir_unidades(decimal);
             break;
         case 5: //Hexadecimal
             decimal = hex_a_dec(stringNumero);
@@ -211,11 +224,12 @@ int main() {
             cout << stringNumero << " hexadecimal a quinario es igual a " << quinario << endl;
             cout << stringNumero << " hexadecimal a octal es igual a " << octal << endl;
             cout << stringNumero << " hexadecimal a binario es igual a " << binario << endl;
+            convertir_unidades(decimal);
             break;
         }
         
         char salir;
-        cout << "¿ Desea Introducir otro numero(S/N) ?" << endl;
+        cout << endl << "ï¿½ Desea Introducir otro numero(S/N) ?" << endl;
         while (1) //Se verifica que el numero ingresado sea valido
         {
             cin >> salir;
@@ -239,35 +253,35 @@ string decimal_a_base(int base, int numero)
 {
     string resultadoInvertido;
     int mod;
-    string numero_a_añadir;
+    string numero_a_anadir = "";
     while(1) { 
         mod = numero % base;
-        numero_a_añadir = to_string(mod);
+        numero_a_anadir = to_string(mod);
         if (base == 16) {
             switch(mod){
             case 10:
-                numero_a_añadir = "A";
+                numero_a_anadir = "A";
             break;
             case 11:
-                numero_a_añadir = "B";
+                numero_a_anadir = "B";
                 break;
             case 12:
-                numero_a_añadir = "C";
+                numero_a_anadir = "C";
                 break;
             case 13:
-                numero_a_añadir = "D";
+                numero_a_anadir = "D";
                 break;
             case 14:
-                numero_a_añadir = "E";
+                numero_a_anadir = "E";
                 break;
             case 15:
-                numero_a_añadir = "F";
+                numero_a_anadir = "F";
                 break;
             default:
                 break;
             }
         }
-        resultadoInvertido.append(numero_a_añadir);
+        resultadoInvertido.append(numero_a_anadir);
         numero = numero / base; 
         if (numero <= 0) {
             break;
@@ -295,7 +309,6 @@ int base_a_decimal(int base, int numero) //8 1234
     }
     numero = numero / 10;
     digitos.push_back(numero % 10); // 0
-    cout << "digitos: " << numero_digitos << endl;
     for (int i = 0; i <= numero_digitos; i++) { 
         resultado += (pow(base, i) * digitos.at(i)); 
         
@@ -306,11 +319,9 @@ int base_a_decimal(int base, int numero) //8 1234
 int hex_a_dec(string str_numero) {
     
     int resultado = 0;
-    cout << str_numero.length() << endl;
-    int tamaño = str_numero.length();
+    int tamano = str_numero.length();
     int posicion = 0;
-    cout << tamaño << endl;
-    for(int x = tamaño-1; x >= 0; x--){
+    for(int x = tamano-1; x >= 0; x--){
         int string_numero = 0;
         
         
@@ -346,4 +357,131 @@ int hex_a_dec(string str_numero) {
         posicion++;
     }
     return resultado;
+}
+
+void convertir_unidades(int numero){
+    cout << endl << "Identificar la unidad de memoria para la conversion con el valor decimal" << endl;
+    cout << "1) bits" << endl;
+    cout << "2) Bytes" << endl;
+    cout << "3) KiloBytes" << endl;
+    cout << "4) MegaBytes" << endl;
+    cout << "5) GigaBytes" << endl;
+    cout << "6) TeraBytes" << endl;
+    int opcion;
+    while (1) //Se verifica que el numero ingresado sea valido
+    {
+        cin >> opcion;
+        if (!cin.fail() && (opcion == 1 || opcion == 2 || opcion == 3 || opcion == 4 || opcion == 5 || opcion == 6)) {
+            break;
+        }
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Ingresa una opcion valida ";
+    }
+    float bits;
+    float bytes;
+    float kilos;
+    float megas;
+    float gigas;
+    float teras;
+    switch(opcion){
+        case 1: //son bits
+            bytes = a_bytes(numero);
+            kilos = prefijo_mayor(bytes);
+            megas = prefijo_mayor(kilos);
+            gigas = prefijo_mayor(megas);
+            teras = prefijo_mayor(gigas);
+            cout << numero << " bits equivalen a: " << endl;
+            cout << fixed << fixed << setprecision(6) << bytes << " Bytes" << endl;
+            cout << fixed << fixed << setprecision(6) << kilos << " KB" << endl;
+            cout << fixed << fixed << setprecision(6) << megas << " MB" << endl;
+            cout << fixed << fixed << setprecision(6) << gigas << " GB" << endl;
+            cout << fixed << fixed << setprecision(6) << teras << " TB" << endl;
+        break;
+        case 2: //son bytes
+            bits = a_bits(numero);
+            kilos = prefijo_mayor(numero);
+            megas = prefijo_mayor(kilos);
+            gigas = prefijo_mayor(megas);
+            teras = prefijo_mayor(gigas);
+            cout << numero << " Bytes equivalen a: " << endl;
+            cout << fixed << fixed << setprecision(6) << bits << " bits" << endl;
+            cout << fixed << fixed << setprecision(6) << kilos << " KB" << endl;
+            cout << fixed << fixed << setprecision(6) << megas << " MB" << endl;
+            cout << fixed << fixed << setprecision(6) << gigas << " GB" << endl;
+            cout << fixed << fixed << setprecision(6) << teras << " TB" << endl;
+        break;
+        case 3: //son KB
+            bytes = prefijo_menor(numero);
+            bits = a_bits(bytes);
+            megas = prefijo_mayor(numero);
+            gigas = prefijo_mayor(megas);
+            teras = prefijo_mayor(gigas);
+            cout << numero << " KiloBytes equivalen a: " << endl;
+            cout << fixed << fixed << setprecision(6) << bits << " bits" << endl;
+            cout << fixed << fixed << setprecision(6) << bytes << " Bytes" << endl;
+            cout << fixed << fixed << setprecision(6) << megas << " MB" << endl;
+            cout << fixed << fixed << setprecision(6) << gigas << " GB" << endl;
+            cout << fixed << fixed << setprecision(6) << teras << " TB" << endl;
+        break;
+        case 4: //son MB
+            kilos = prefijo_menor(numero);
+            bytes = prefijo_menor(kilos);
+            bits = a_bits(bytes);
+            gigas = prefijo_mayor(numero);
+            teras = prefijo_mayor(gigas);
+            cout << numero << " MegaBytes equivalen a: " << endl;
+            cout << fixed << fixed << setprecision(6) << bits << " bits" << endl;
+            cout << fixed << fixed << setprecision(6) << bytes << " Bytes" << endl;
+            cout << fixed << fixed << setprecision(6) << kilos << " KB" << endl;
+            cout << fixed << fixed << setprecision(6) << gigas << " GB" << endl;
+            cout << fixed << fixed << setprecision(6) << teras << " TB" << endl;
+        break;
+        case 5: //son GB
+            megas = prefijo_menor(numero);
+            kilos = prefijo_menor(megas);
+            bytes = prefijo_menor(kilos);
+            bits = a_bits(bytes);
+            teras = prefijo_mayor(gigas);
+            cout << numero << " GigaBytes equivalen a: " << endl;
+            cout << fixed << fixed << setprecision(6) << bits << " bits" << endl;
+            cout << fixed << fixed << setprecision(6) << bytes << " Bytes" << endl;
+            cout << fixed << fixed << setprecision(6) << kilos << " KB" << endl;
+            cout << fixed << fixed << setprecision(6) << megas << " MB" << endl;
+            cout << fixed << fixed << setprecision(6) << teras << " TB" << endl;
+        break;
+        case 6: //son TB
+            gigas = prefijo_menor(numero);
+            megas = prefijo_menor(gigas);
+            kilos = prefijo_menor(megas);
+            bytes = prefijo_menor(kilos);
+            bits = a_bits(bytes);
+            
+            cout << numero << " TeraBytes equivalen a: " << endl;
+            cout << fixed << fixed << setprecision(6) << bits << " bits" << endl;
+            cout << fixed << fixed << setprecision(6) << bytes << " Bytes" << endl;
+            cout << fixed << fixed << setprecision(6) << kilos << " KB" << endl;
+            cout << fixed << fixed << setprecision(6) << megas << " MB" << endl;
+            cout << fixed << fixed << setprecision(6) << gigas << " GB" << endl;
+        break;
+        default:
+        cout << "Esto nunca se deberia de ejecutar :O" << endl;
+        break;
+    }
+}
+
+float prefijo_mayor(float numero){
+    return (numero / 1024);
+}
+
+float prefijo_menor(float numero){
+    return (numero * 1024);
+}
+
+float a_bytes(float bits){
+    return (bits / 8);
+}
+
+float a_bits(float bytes){
+    return (bytes * 8);
 }
