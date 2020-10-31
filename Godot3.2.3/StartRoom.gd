@@ -3,6 +3,7 @@ extends StaticBody
 var floor_collision
 var room_x
 var room_z
+const room_y = 10
 var paredes = Array()
 var paredes_colisiones = Array()
 var paredes_meshes = Array()
@@ -24,9 +25,9 @@ func _ready():
 	surface_material = load("res://base_spatial_material.tres")
 	#Set floor size
 	randomize()
-	room_x = rand_range(10,30)
+	room_x = rand_range(20,50)
 	randomize()
-	room_z = rand_range(10,30)
+	room_z = rand_range(20,50)
 	floor_collision.scale.x = room_x/2
 	floor_collision.scale.z = room_z/2
 		
@@ -58,39 +59,39 @@ func _ready():
 	#Transform wall0(up)
 	#Transform mesh
 	paredes[0].get_child(1).scale.x = room_x
-	paredes[0].get_child(1).scale.y = 5
+	paredes[0].get_child(1).scale.y = room_y
 	#Transform Collision
 	paredes[0].get_child(0).scale.x = room_x/2
-	paredes[0].get_child(0).scale.y = 5
+	paredes[0].get_child(0).scale.y = room_y
 	#move wall0
 	paredes[0].global_translate(Vector3(0,2.5,-room_z/2))
 	
 	#Transform wall1(left)
 	#Transform mesh
 	paredes[1].get_child(1).scale.z = room_z
-	paredes[1].get_child(1).scale.y = 5.0
+	paredes[1].get_child(1).scale.y = room_y
 	#Transform Collision
 	paredes[1].get_child(0).scale.z = room_z/2
-	paredes[1].get_child(0).scale.y = 5
+	paredes[1].get_child(0).scale.y = room_y
 	#Move wall 1
 	paredes[1].global_translate(Vector3(-room_x/2,2.5,0))
 	
 	#Transform wall2(right)
 	#Transform mesh
 	paredes[2].get_child(1).scale.z = room_z
-	paredes[2].get_child(1).scale.y = 5.0
+	paredes[2].get_child(1).scale.y = room_y
 	#Transform Collision
 	paredes[2].get_child(0).scale.z = room_z/2
-	paredes[2].get_child(0).scale.y = 5
+	paredes[2].get_child(0).scale.y = room_y
 	#Move wall 2
 	paredes[2].global_translate(Vector3(room_x/2,2.5,0))
 	
 	#Transform wall3(down) 
 	paredes[3].get_child(1).scale.x = room_x
-	paredes[3].get_child(1).scale.y = 5
+	paredes[3].get_child(1).scale.y = room_y
 	#Transform Collision
 	paredes[3].get_child(0).scale.x = room_x/2
-	paredes[3].get_child(0).scale.y = 5
+	paredes[3].get_child(0).scale.y = room_y
 	#Move wall 2
 	paredes[3].global_translate(Vector3(0,2.5,room_z/2))
 	

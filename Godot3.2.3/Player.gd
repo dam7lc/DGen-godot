@@ -14,8 +14,8 @@ var space_state
 # var b = "text"
 const GRAVITY = -24.8
 var vel = Vector3()
-const MAX_SPEED = 20
-const JUMP_SPEED = 10
+const MAX_SPEED = 15
+const JUMP_SPEED = 12
 const ACCEL = 4.5
 var dir = Vector3()
 
