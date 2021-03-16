@@ -1,6 +1,7 @@
-extends KinematicBody
-const speed = 15.0
-
+extends RigidBody
+const speed = 100.0
+var k_collision
+var playerid
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -8,9 +9,17 @@ const speed = 15.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	playerid = get_parent().get_node("Player").get_instance_id()
+	global_scale(Vector3(.5,.5,.5))
+	apply_impulse(Vector3.ZERO,-get_transform().basis.z * speed)
+	contact_monitor = true
+	contacts_reported = 1
+	connect("body_entered", self, "hit")
+
+func hit(body):
+	print("funciona!")
+	yield(get_tree().create_timer(3.0), "timeout")
+	queue_free()
+	
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta):
-	move_and_slide(-get_transform().basis.z * speed, get_transform().basis.y, false)

@@ -18,7 +18,7 @@ func _process(delta):
 	
 	
 func shoot():
-	var projectile = KinematicBody.new()
+	var projectile = RigidBody.new()
 	var projectileMesh = MeshInstance.new()
 	projectileMesh.set_mesh(unit_mesh)
 	var projectileCollision = CollisionShape.new()
@@ -28,4 +28,7 @@ func shoot():
 	projectile.set_script(load("res://projectile.gd"))
 	projectile.set_rotation(get_rotation())
 	projectile.set_translation(get_translation()+(-get_transform().basis.z*2))
+	
 	get_parent().add_child(projectile)
+	
+	
