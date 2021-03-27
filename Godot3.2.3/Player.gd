@@ -27,7 +27,7 @@ func _ready():
 		camera = $SpringArm/Camera
 		springArm = $SpringArm
 		springArm.add_excluded_object(.get_rid())
-		player_mesh = $Unit
+		player_mesh = $F_body
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
@@ -95,7 +95,7 @@ func _input(event):
 				isTP = false
 				isFP = true
 				springArm.set_length(0)
-				springArm.set_translation(Vector3(0,1.5,0))
+				springArm.set_translation(Vector3(0,1.5,1))
 				springArm.set_rotation_degrees(Vector3(0,0,0))
 			elif isFP:
 				isTP = false
