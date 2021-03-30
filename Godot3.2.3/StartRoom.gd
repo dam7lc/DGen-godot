@@ -1,5 +1,7 @@
 extends StaticBody
 
+const cuantos = 3
+var room_center = Vector2(0,0)
 var floor_collision
 var room_x
 var room_z
@@ -28,6 +30,7 @@ func _ready():
 	room_x = rand_range(20,50)
 	randomize()
 	room_z = rand_range(20,50)
+	
 	floor_collision.scale.x = room_x/2
 	floor_collision.scale.z = room_z/2
 		
@@ -39,63 +42,65 @@ func _ready():
 	add_child(testMesh)
 	
 	
-	
+	for j in range (cuantos):
+		
 		#Create Walls
-	for i in range(4):
-		paredes.append(StaticBody.new())
-		paredes_colisiones.append(CollisionShape.new())
-		var colshape = BoxShape.new()
-		colshape.set_extents(Vector3(1,1,1))
-		paredes_colisiones[i].set_shape(colshape)
-		paredes[i].add_child(paredes_colisiones[i])	
-		add_child(paredes[i])
-		paredes_meshes.append(make_cube())
-#		paredes_meshes[i].set_mesh(unit_mesh)
-#		paredes_meshes[i].set_surface_material(0,surface_material)
-		paredes[i].add_child(paredes_meshes[i])	
-			
-			
-			
-	#Transform wall0(up)
-	#Transform mesh
-	paredes[0].get_child(1).scale.x = room_x
-	paredes[0].get_child(1).scale.y = room_y
-	#Transform Collision
-	paredes[0].get_child(0).scale.x = room_x/2
-	paredes[0].get_child(0).scale.y = room_y
-	#move wall0
-	paredes[0].global_translate(Vector3(0,2.5,-room_z/2))
-	
-	#Transform wall1(left)
-	#Transform mesh
-	paredes[1].get_child(1).scale.z = room_z
-	paredes[1].get_child(1).scale.y = room_y
-	#Transform Collision
-	paredes[1].get_child(0).scale.z = room_z/2
-	paredes[1].get_child(0).scale.y = room_y
-	#Move wall 1
-	paredes[1].global_translate(Vector3(-room_x/2,2.5,0))
-	
-	#Transform wall2(right)
-	#Transform mesh
-	paredes[2].get_child(1).scale.z = room_z
-	paredes[2].get_child(1).scale.y = room_y
-	#Transform Collision
-	paredes[2].get_child(0).scale.z = room_z/2
-	paredes[2].get_child(0).scale.y = room_y
-	#Move wall 2
-	paredes[2].global_translate(Vector3(room_x/2,2.5,0))
-	
-	#Transform wall3(down) 
-	paredes[3].get_child(1).scale.x = room_x
-	paredes[3].get_child(1).scale.y = room_y
-	#Transform Collision
-	paredes[3].get_child(0).scale.x = room_x/2
-	paredes[3].get_child(0).scale.y = room_y
-	#Move wall 2
-	paredes[3].global_translate(Vector3(0,2.5,room_z/2))
-	
-	#TODO register ignore to springarm
+		for i in range(4):
+			paredes.append(StaticBody.new())
+			paredes_colisiones.append(CollisionShape.new())
+			var colshape = BoxShape.new()
+			colshape.set_extents(Vector3(1,1,1))
+			paredes_colisiones[i].set_shape(colshape)
+			paredes[i].add_child(paredes_colisiones[i])	
+			add_child(paredes[i])
+			paredes_meshes.append(make_cube())
+	#		paredes_meshes[i].set_mesh(unit_mesh)
+	#		paredes_meshes[i].set_surface_material(0,surface_material)
+			paredes[i].add_child(paredes_meshes[i])	
+				
+				
+				
+		#Transform wall0(up)
+		#Transform mesh
+		paredes[0].get_child(1).scale.x = room_x
+		paredes[0].get_child(1).scale.y = room_y
+		#Transform Collision
+		paredes[0].get_child(0).scale.x = room_x/2
+		paredes[0].get_child(0).scale.y = room_y
+		#move wall0
+		paredes[0].global_translate(Vector3(room_center.x,2.5,(-room_z/2)+room_center.y))
+		
+		#Transform wall1(left)
+		#Transform mesh
+		paredes[1].get_child(1).scale.z = room_z
+		paredes[1].get_child(1).scale.y = room_y
+		#Transform Collision
+		paredes[1].get_child(0).scale.z = room_z/2
+		paredes[1].get_child(0).scale.y = room_y
+		#Move wall 1
+		paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y))
+		
+		#Transform wall2(right)
+		#Transform mesh
+		paredes[2].get_child(1).scale.z = room_z
+		paredes[2].get_child(1).scale.y = room_y
+		#Transform Collision
+		paredes[2].get_child(0).scale.z = room_z/2
+		paredes[2].get_child(0).scale.y = room_y
+		#Move wall 2
+		paredes[2].global_translate(Vector3((room_x/2)+room_center.x,2.5,room_center.y))
+		
+		#Transform wall3(down) 
+		paredes[3].get_child(1).scale.x = room_x
+		paredes[3].get_child(1).scale.y = room_y
+		#Transform Collision
+		paredes[3].get_child(0).scale.x = room_x/2
+		paredes[3].get_child(0).scale.y = room_y
+		#Move wall 2
+		paredes[3].global_translate(Vector3(room_center.x,2.5,(room_z/2)+room_center.y))
+		room_center.x = room_x/2
+		room_center.y = room_z/2
+		#TODO register ignore to springarm
 			
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
