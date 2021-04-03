@@ -9,9 +9,8 @@ var isFP = false
 var prevtime = 0
 var player_mesh
 var space_state
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var array_paredes_a_ignorar
+
 const GRAVITY = -24.8
 var vel = Vector3()
 const MAX_SPEED = 15
@@ -22,18 +21,20 @@ var dir = Vector3()
 const DEACCEL= 16
 const MAX_SLOPE_ANGLE = 40
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready():
 		camera = $SpringArm/Camera
 		springArm = $SpringArm
 		springArm.add_excluded_object(.get_rid())
 		player_mesh = $Unit
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+		array_paredes_a_ignorar = Array()
 
-func _input(event):
+func agregar_pared_a_ignorar(pared):
+	array_paredes_a_ignorar.append(pared)
+
+func _input(event): 
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		#Si estamos en tercera persona, mover la camara con mouse
 		if isTP:
 			rot_x += event.relative.x * .01
 			rot_y += 0.0
@@ -41,7 +42,7 @@ func _input(event):
 			if event.relative.y < 0 and springArm.rotation_degrees.x < 0: #Se movio arriba
 				
 				rot_y += event.relative.y * .01
-				 # first rotate in Y
+				 # primero Y
 				
 			elif event.relative.y > 0 and springArm.rotation_degrees.x > -40:
 				
@@ -53,7 +54,7 @@ func _input(event):
 			rotate_y(-rot_x)
 			#springArm.rotate_y(-rot_x)
 			
-		elif isFP:
+		elif isFP: #si estamos en primera persona, mover la camara con el mouse
 			rot_x += event.relative.x * .01
 			rot_y += 0.0
 			
@@ -76,28 +77,31 @@ func _input(event):
 		if(space_state):
 			var ignore = Array()
 			ignore.append(.get_rid())
-			var result = space_state.intersect_ray(from, to, ignore)
+			var result = space_state.intersect_ray(from, to, ignore, 0x7FFFFFFF, true, true)
 			if(result):
 				player_mesh.look_at(Vector3(result.position.x, .45, result.position.z), Vector3(0,1,0))
+			
 		
 		
 	if Input.is_action_pressed("change_camera"):
 		var time = OS.get_ticks_msec()
-		if time > (prevtime + 250):
+		if time > (prevtime + 250): #Retardo para poder cambiar de camara de nuevo
 			
-			if !isTP and !isFP:
+			if !isTP and !isFP: #si estamos en la vista desde arriba, cambiar a tercera persona
 				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 				isTP = true
 				springArm.set_length(5.0)
 				springArm.set_translation(Vector3(1,1.5,-.5))
 				camera.set_translation(Vector3(0,0,0))
-			elif isTP:
+				springArm.clear_excluded_objects()
+			elif isTP: #Si estamos en tercera persona, cambiar a primera persona
 				isTP = false
 				isFP = true
 				springArm.set_length(0)
 				springArm.set_translation(Vector3(0,1.5,-1))
 				springArm.set_rotation_degrees(Vector3(0,0,0))
-			elif isFP:
+				
+			elif isFP: #Si estamos en primera persona, cambiar a vista hacia arriba
 				isTP = false
 				isFP = false
 				springArm.set_length(30)
@@ -106,7 +110,13 @@ func _input(event):
 				set_rotation_degrees(Vector3(0,0,0))
 				camera.set_rotation_degrees(Vector3(0,0,0))
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+				for pared in array_paredes_a_ignorar:
+					springArm.add_excluded_object(pared)
 			prevtime = time
+		
+func generacion_finalizada():
+	for pared in array_paredes_a_ignorar:
+		springArm.add_excluded_object(pared)
 		
 func _physics_process(delta):
 	process_input(delta)
@@ -117,6 +127,7 @@ func process_input(delta):
 	dir = Vector3()
 	var cam_xform = camera.get_global_transform()
 	var input_movement_vector = Vector2()
+	
 	if Input.is_action_pressed("forward"):
 		input_movement_vector.y += 1
 	if Input.is_action_pressed("backward"):
@@ -132,10 +143,7 @@ func process_input(delta):
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump"):
 			vel.y = JUMP_SPEED
-	# ----------------------------------
-
-	# ----------------------------------
-	# Capturing/Freeing the cursor
+	
 	if Input.is_action_just_pressed("ui_cancel"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE and (isTP or isFP):
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

@@ -1,6 +1,6 @@
 extends StaticBody
 
-var shootTime = 5.0
+var shootTime = 2.0
 var prevShootTime = 0
 var actualTime = 0
 var unit_mesh

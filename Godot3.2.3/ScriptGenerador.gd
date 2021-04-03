@@ -1,13 +1,12 @@
 extends Spatial
 
-const cuantos = 3
+const cuantos = 4
 var room_center = Vector2(0,0)
 var floor_collision
 var room_x
 var room_z
 const room_y = 10
-
-#var unit_mesh
+var player
 var surface_material
 
 var array_quad_vertices = [];
@@ -18,29 +17,33 @@ var dictionary_check_quad_vertices = {};
 const CUBE_SIZE = .5;
 
 
-# Called when the node enters the scene tree for the first time.
+#Llamado cuando se inicializa el objeto
 func _ready():
-	#unit_mesh = load("res://Unit.obj")
+	
+	for child in get_parent().get_children(): #Obtener referencia al player para ignorar colision de la camara con paredes
+		if child.get_script() == load("res://Player.gd"):
+			player = child
+	
 	surface_material = load("res://base_spatial_material.tres")
-	#Set floor size
-	for j in range(cuantos):
+	
+	for j in range(cuantos): #For para cada pared
+		
+		#Randomizar tamaño habitacion
 		randomize()
 		room_x = rand_range(20,50)
 		randomize()
 		room_z = rand_range(20,50)
-			
-		#new TESTmesh
-		#var testMesh = make_cube()
-	#	testMesh.translate(Vector3(-room_x/2, .5,-room_z/2))
-		#testMesh.scale.x = room_x
-		#testMesh.scale.z = room_z
-		#add_child(testMesh)
+		
+		if j != 0:
+			room_center.x = room_center.x + (room_x/2) 	
+			#room_center.y = room_center.x + (room_z/2)
+	
 		
 		var paredes = Array()
 		var paredes_colisiones = Array()
 		var paredes_meshes = Array()
 		
-			#Create Walls
+		#Se crean los tipos de objeto para 4 paredes y 1 piso
 		for i in range(5):
 			
 			paredes.append(StaticBody.new())
@@ -51,78 +54,105 @@ func _ready():
 			paredes[i].add_child(paredes_colisiones[i])	
 			add_child(paredes[i])
 			paredes_meshes.append(make_cube())
-	#		paredes_meshes[i].set_mesh(unit_mesh)
-	#		paredes_meshes[i].set_surface_material(0,surface_material)
+			paredes_meshes[i].set_surface_material(0,surface_material)
 			paredes[i].add_child(paredes_meshes[i])	
 				
 				
 				
-		#Transform wall0(up)
-		#Transform mesh
+		#Tamaño de pared0(pared de arriba)
+		#Tamaño del mesh
 		paredes[0].get_child(1).scale.x = room_x
 		paredes[0].get_child(1).scale.y = room_y
-		#Transform Collision
+		#Tamaño de la colision
 		paredes[0].get_child(0).scale.x = room_x/2
-		paredes[0].get_child(0).scale.y = room_y
-		#move wall0
+		paredes[0].get_child(0).scale.y = room_y/2
+		paredes[0].get_child(0).scale.z = .5
+		#Posicion pared0
 		paredes[0].global_translate(Vector3(room_center.x,2.5,(-room_z/2)+room_center.y))
 		
-		#Transform wall1(left)
-		#Transform mesh
-		paredes[1].get_child(1).scale.z = room_z
-		paredes[1].get_child(1).scale.y = room_y
-		#Transform Collision
-		paredes[1].get_child(0).scale.z = room_z/2
-		paredes[1].get_child(0).scale.y = room_y
-		#Move wall 1
-		paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y))
+		#player ignore paredes
+		player.agregar_pared_a_ignorar(paredes[0])
 		
-		#Transform wall2(right)
-		#Transform mesh
-		paredes[2].get_child(1).scale.z = room_z
-		paredes[2].get_child(1).scale.y = room_y
-		#Transform Collision
-		paredes[2].get_child(0).scale.z = room_z/2
-		paredes[2].get_child(0).scale.y = room_y
-		#Move wall 2
-		paredes[2].global_translate(Vector3((room_x/2)+room_center.x,2.5,room_center.y))
+		if j != 0: #La primer pared debe ser completa (no entrada)
+			
+			#Tamaño de pared1(pared de la izquierda)
+			#Tamaño del mesh
+			paredes[1].get_child(1).scale.z = room_z/3
+			paredes[1].get_child(1).scale.y = room_y
+			#Tamaño de Collision
+			paredes[1].get_child(0).scale.x = .5
+			paredes[1].get_child(0).scale.z = room_z/6
+			paredes[1].get_child(0).scale.y = room_y/2
+			#Posicion pared1
+			paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,2.5,(room_center.y-room_z/3)))
+			#player ignore paredes
+			player.agregar_pared_a_ignorar(paredes[1])
+			
+			#Tamaño de pared2(pared de la izquierda 2)
+			#Tamaño del mesh
+			paredes[2].get_child(1).scale.z = room_z/3
+			paredes[2].get_child(1).scale.y = room_y
+			#Tamaño de Collision
+			paredes[2].get_child(0).scale.z = room_z/6
+			paredes[2].get_child(0).scale.y = room_y/2
+			paredes[2].get_child(0).scale.x = .5
+			#Posicion pared2
+			paredes[2].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y+room_z/3))
+			#player ignore paredes
+			player.agregar_pared_a_ignorar(paredes[2])
+			
+		else:
+			paredes[1].get_child(1).scale.z = room_z
+			paredes[1].get_child(1).scale.y = room_y
+			
+			paredes[1].get_child(0).scale.z = room_z/2
+			paredes[1].get_child(0).scale.x = .5
+			paredes[1].get_child(0).scale.y = room_y/2
+			
+			paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y))
+			#player ignore paredes
+			player.agregar_pared_a_ignorar(paredes[1])
+			
+			paredes[2].get_child(1).scale.z = 0
+			paredes[2].get_child(1).scale.y = 0
+			
+			paredes[2].get_child(0).scale.z = 0
+			paredes[2].get_child(0).scale.x = .5
+			paredes[2].get_child(0).scale.y = 0
+			
+			paredes[2].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y+room_z/3))
+			#player ignore paredes
+			player.agregar_pared_a_ignorar(paredes[2])
 		
-		#Transform wall3(down) 
+		#Tamaño de pared3(pared de la abajo)
 		paredes[3].get_child(1).scale.x = room_x
 		paredes[3].get_child(1).scale.y = room_y
-		#Transform Collision
+		#Tamaño de colision
 		paredes[3].get_child(0).scale.x = room_x/2
-		paredes[3].get_child(0).scale.y = room_y
-		#Move wall 2
+		paredes[3].get_child(0).scale.y = room_y/2
+		paredes[3].get_child(0).scale.z = .5
+		#Posicion pared 3
 		paredes[3].global_translate(Vector3(room_center.x,2.5,(room_z/2)+room_center.y))
+		player.agregar_pared_a_ignorar(paredes[3])
 		
 		
-		#Transform wall4(floor)
+		#Tamaño del piso
 		paredes[4].get_child(1).scale.x = room_x
 		paredes[4].get_child(1).scale.y = 1
 		paredes[4].get_child(1).scale.z = room_z 
-		#Transform Collision
+		#Tamaño de Colision
 		paredes[4].get_child(0).scale.x = room_x/2
 		paredes[4].get_child(0).scale.y = .5
 		paredes[4].get_child(0).scale.z = room_z/2
-		#Move wall 2
+		#Posicion piso
 		paredes[4].global_translate(Vector3(room_center.x,0,room_center.y))
-		room_center.x = room_x/2
-		room_center.y = room_z/2
 		
+		room_center.x = room_center.x + room_x/2
+		#room_center.y = room_z/2
+	
+	player.generacion_finalizada()
 		
-		#TODO register ignore to springarm
-				
-	# Called every frame. 'delta' is the elapsed time since the previous frame.
-	#func _process(delta):
-	#	pass
-	#func newMesh():
-	#	var tmpMesh = Mesh.new()
-	#	var vertices = PoolVector3Array()
-	#	var UVs = PoolVector2Array()
-	#	var mat = SpatialMaterial.new()
-	#	var color = Color(0.9, 0.1, 0.1)
-	#	var testMesh = MeshInstance.new()
+	
 
 func make_cube():
 	array_quad_vertices = [];
@@ -145,11 +175,6 @@ func make_cube():
 	var vert_south_bottomleft = Vector3(CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE);
 	var vert_south_bottomright = Vector3(-CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE);
 	
-	
-	# Make the six quads for needed to make a box!
-	# ============================================
-	# IMPORTANT: You have to input the points in the going either clockwise, or counter clockwise
-	# or the add_quad function will not work!
 	
 	add_quad(vert_south_topright, vert_south_topleft, vert_south_bottomleft, vert_south_bottomright);
 	add_quad(vert_north_topright, vert_north_bottomright, vert_north_bottomleft, vert_north_topleft);
