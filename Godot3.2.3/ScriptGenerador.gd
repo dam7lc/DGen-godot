@@ -3,9 +3,11 @@ extends Spatial
 const cuantos = 4
 var room_center = Vector2(0,0)
 var floor_collision
+
 var room_x
 var room_z
-const room_y = 10
+const room_y = 5
+
 var player
 var surface_material
 

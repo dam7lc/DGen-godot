@@ -26,7 +26,7 @@ func _ready():
 		camera = $SpringArm/Camera
 		springArm = $SpringArm
 		springArm.add_excluded_object(.get_rid())
-		player_mesh = $Unit
+		player_mesh = $Mesh
 		array_paredes_a_ignorar = Array()
 
 func agregar_pared_a_ignorar(pared):
@@ -79,7 +79,7 @@ func _input(event):
 			ignore.append(.get_rid())
 			var result = space_state.intersect_ray(from, to, ignore, 0x7FFFFFFF, true, true)
 			if(result):
-				player_mesh.look_at(Vector3(result.position.x, .45, result.position.z), Vector3(0,1,0))
+				player_mesh.look_at(Vector3(result.position.x, .3, result.position.z), Vector3(0,1,0))
 			
 		
 		
@@ -94,13 +94,13 @@ func _input(event):
 				springArm.set_translation(Vector3(1,1.5,-.5))
 				camera.set_translation(Vector3(0,0,0))
 				springArm.clear_excluded_objects()
+				player_mesh.set_rotation_degrees(Vector3(0,0,0))
 			elif isTP: #Si estamos en tercera persona, cambiar a primera persona
 				isTP = false
 				isFP = true
 				springArm.set_length(0)
 				springArm.set_translation(Vector3(0,1.5,-1))
 				springArm.set_rotation_degrees(Vector3(0,0,0))
-				
 			elif isFP: #Si estamos en primera persona, cambiar a vista hacia arriba
 				isTP = false
 				isFP = false
