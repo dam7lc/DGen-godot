@@ -36,12 +36,12 @@ func _input(event):
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		#Si estamos en tercera persona, mover la camara con mouse
 		if isTP:
-			rot_x += event.relative.x * .01
-			rot_y += 0.0
+			rot_x += event.relative.x * .01 
+			rot_y += 0.0 
 			
 			if event.relative.y < 0 and springArm.rotation_degrees.x < 0: #Se movio arriba
 				
-				rot_y += event.relative.y * .01
+				rot_y += event.relative.y * .01 
 				 # primero Y
 				
 			elif event.relative.y > 0 and springArm.rotation_degrees.x > -40:
@@ -50,6 +50,7 @@ func _input(event):
 			
 			springArm.transform.basis = Basis() 
 			springArm.rotate_x(-rot_y)
+			
 			transform.basis = Basis()
 			rotate_y(-rot_x)
 			#springArm.rotate_y(-rot_x)
@@ -68,8 +69,8 @@ func _input(event):
 				rot_y += event.relative.y * .01 
 			
 			transform.basis = Basis() 
-			rotate_x(-rot_y)
-			rotate_y(-rot_x)
+			rotate_x(-rot_y) 
+			rotate_y(-rot_x) 
 	elif event is InputEventMouseMotion and (!isTP and !isFP):
 		var from = camera.project_ray_origin(event.position)
 		var to = from + camera.project_ray_normal(event.position) * 5000 	

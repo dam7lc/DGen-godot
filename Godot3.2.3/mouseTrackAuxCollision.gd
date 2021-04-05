@@ -11,4 +11,4 @@ func _ready():
 func _process(delta):
 	#TODO: arreglar colision auxiliar para detectar mouse
 	var pos = Vector3(player.translation.x/100, 0, player.translation.z/100)
-	translate(pos)
+	translate(pos/100)
