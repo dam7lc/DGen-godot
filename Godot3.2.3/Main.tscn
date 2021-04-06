@@ -15,7 +15,7 @@
 [sub_resource type="BoxShape" id=3]
 extents = Vector3( 100, 1, 100 )
 
-[node name="Spatial" type="Spatial"]
+[node name="Plano" type="Spatial"]
 
 [node name="Torretilla" type="StaticBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.106, -0.002, -5.344 )

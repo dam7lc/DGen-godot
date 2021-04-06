@@ -4,10 +4,9 @@ var shootTime = 2.0
 var prevShootTime = 0
 var actualTime = 0
 var unit_mesh
+
 func _ready():
 	unit_mesh = load("res://Unit.obj")
-
-
 
 func _process(delta):
 	actualTime+=delta
