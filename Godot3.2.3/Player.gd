@@ -3,6 +3,7 @@ extends KinematicBody
 var rot_x = 0
 var rot_y = 0
 var camera
+var collision
 var springArm
 var isTP = false
 var isFP = false
@@ -10,11 +11,12 @@ var prevtime = 0
 var player_mesh
 var space_state
 var array_paredes_a_ignorar
+var can_dash
+var last_dash_time = 0
 
 const GRAVITY = -24.8
 var vel = Vector3()
-const MAX_SPEED = 15
-const JUMP_SPEED = 12
+const MAX_SPEED = 9
 const ACCEL = 4.5
 var dir = Vector3()
 
@@ -24,6 +26,7 @@ const MAX_SLOPE_ANGLE = 40
 
 func _ready():
 		camera = $SpringArm/Camera
+		collision = $CollisionShape
 		springArm = $SpringArm
 		springArm.add_excluded_object(.get_rid())
 		player_mesh = $Mesh
@@ -77,10 +80,10 @@ func _input(event):
 		
 		if(space_state):
 			var ignore = Array()
-			ignore.append(.get_rid())
+			ignore.append(self)
 			var result = space_state.intersect_ray(from, to, ignore, 0x7FFFFFFF, true, true)
 			if(result):
-				player_mesh.look_at(Vector3(result.position.x, .3, result.position.z), Vector3(0,1,0))
+				player_mesh.look_at(Vector3(result.position.x, -.8, result.position.z), Vector3(0,1,0))
 			
 		
 		
@@ -105,7 +108,7 @@ func _input(event):
 			elif isFP: #Si estamos en primera persona, cambiar a vista hacia arriba
 				isTP = false
 				isFP = false
-				springArm.set_length(30)
+				springArm.set_length(10)
 				springArm.set_translation(Vector3(0,1,0))
 				springArm.set_rotation_degrees(Vector3(-50,0,0))
 				set_rotation_degrees(Vector3(0,0,0))
@@ -126,7 +129,7 @@ func _physics_process(delta):
 	
 func process_input(delta):
 	dir = Vector3()
-	var cam_xform = camera.get_global_transform()
+	var cam_xform = collision.get_global_transform()
 	var input_movement_vector = Vector2()
 	
 	if Input.is_action_pressed("forward"):
@@ -142,8 +145,16 @@ func process_input(delta):
 	dir += -cam_xform.basis.z * input_movement_vector.y
 	dir += cam_xform.basis.x * input_movement_vector.x
 	if is_on_floor():
-		if Input.is_action_just_pressed("jump"):
-			vel.y = JUMP_SPEED
+		if Input.is_action_just_pressed("dash"):
+			var actual_time = OS.get_ticks_msec()
+			if (actual_time-last_dash_time) > 1000:
+				can_dash = true
+			if can_dash:
+				vel += -cam_xform.basis.z * input_movement_vector.y * 40
+				vel += cam_xform.basis.x * input_movement_vector.x * 40
+				last_dash_time = OS.get_ticks_msec()
+				can_dash = false
+			
 	
 	if Input.is_action_just_pressed("ui_cancel"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE and (isTP or isFP):
@@ -172,5 +183,5 @@ func process_movement(delta):
 	hvel = hvel.linear_interpolate(target, accel * delta)
 	vel.x = hvel.x
 	vel.z = hvel.z
-	vel = move_and_slide(vel, Vector3(0, 1, 0), 0.05, 4, deg2rad(MAX_SLOPE_ANGLE))
+	vel = move_and_slide(vel, Vector3(0, 1, 0), true, 4, deg2rad(MAX_SLOPE_ANGLE))
 	

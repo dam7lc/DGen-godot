@@ -5,7 +5,7 @@ var room_center = Vector2(0,0)
 var floor_collision
 var room_x
 var room_z
-const room_y = 5
+const room_y = 3.5
 var player
 var surface_material
 
@@ -30,9 +30,11 @@ func _ready():
 		
 		#Randomizar tamaño habitacion
 		randomize()
-		room_x = rand_range(20,50)
+		room_x = rand_range(10,20)
+		print(room_x)
 		randomize()
-		room_z = rand_range(20,50)
+		room_z = rand_range(10,20)
+		print(room_z)
 		
 		if j != 0:
 			room_center.x = room_center.x + (room_x/2) 	
@@ -59,14 +61,16 @@ func _ready():
 				colshape2.set_extents(Vector3(1,1,1))
 				paredes_colisiones2.set_shape(colshape2)
 				area_col.add_child(paredes_colisiones2)
-				area_col.set_script(load("res://Area_pared_inferior.gd"))
 				paredes[i].add_child(area_col)
+				paredes[i].set_script(load("res://Area_pared_inferior.gd"))
+				paredes[i].area_added()
 					
 			add_child(paredes[i])
 			paredes_meshes.append(make_cube())
 			paredes_meshes[i].set_surface_material(0,surface_material)
 			paredes[i].add_child(paredes_meshes[i])	
-			
+			if paredes[i].get_script() == load("res://Area_pared_inferior.gd"):
+				paredes[i].mesh_added()
 			
 				
 				
@@ -76,12 +80,13 @@ func _ready():
 		#Tamaño del mesh
 		paredes[0].get_child(1).scale.x = room_x
 		paredes[0].get_child(1).scale.y = room_y
+		paredes[0].get_child(1).scale.z = .2
 		#Tamaño de la colision
 		paredes[0].get_child(0).scale.x = room_x/2
 		paredes[0].get_child(0).scale.y = room_y/2
-		paredes[0].get_child(0).scale.z = .5
+		paredes[0].get_child(0).scale.z = .1
 		#Posicion pared0
-		paredes[0].global_translate(Vector3(room_center.x,2.5,(-room_z/2)+room_center.y))
+		paredes[0].global_translate(Vector3(room_center.x,room_y/2,(-room_z/2)+room_center.y))
 		
 		#player ignore paredes
 		player.agregar_pared_a_ignorar(paredes[0])
@@ -92,12 +97,13 @@ func _ready():
 			#Tamaño del mesh
 			paredes[1].get_child(1).scale.z = room_z/3
 			paredes[1].get_child(1).scale.y = room_y
+			paredes[1].get_child(1).scale.x = .2
 			#Tamaño de Collision
-			paredes[1].get_child(0).scale.x = .5
+			paredes[1].get_child(0).scale.x = .1
 			paredes[1].get_child(0).scale.z = room_z/6
 			paredes[1].get_child(0).scale.y = room_y/2
 			#Posicion pared1
-			paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,2.5,(room_center.y-room_z/3)))
+			paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,room_y/2,(room_center.y-room_z/3)))
 			#player ignore paredes
 			player.agregar_pared_a_ignorar(paredes[1])
 			
@@ -105,24 +111,26 @@ func _ready():
 			#Tamaño del mesh
 			paredes[2].get_child(1).scale.z = room_z/3
 			paredes[2].get_child(1).scale.y = room_y
+			paredes[2].get_child(1).scale.x = .2
 			#Tamaño de Collision
 			paredes[2].get_child(0).scale.z = room_z/6
 			paredes[2].get_child(0).scale.y = room_y/2
-			paredes[2].get_child(0).scale.x = .5
+			paredes[2].get_child(0).scale.x = .1
 			#Posicion pared2
-			paredes[2].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y+room_z/3))
+			paredes[2].global_translate(Vector3((-room_x/2)+room_center.x,room_y/2,room_center.y+room_z/3))
 			#player ignore paredes
 			player.agregar_pared_a_ignorar(paredes[2])
 			
 		else:
 			paredes[1].get_child(1).scale.z = room_z
 			paredes[1].get_child(1).scale.y = room_y
+			paredes[1].get_child(1).scale.x = .2
 			
 			paredes[1].get_child(0).scale.z = room_z/2
-			paredes[1].get_child(0).scale.x = .5
+			paredes[1].get_child(0).scale.x = .1
 			paredes[1].get_child(0).scale.y = room_y/2
 			
-			paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y))
+			paredes[1].global_translate(Vector3((-room_x/2)+room_center.x,room_y/2,room_center.y))
 			#player ignore paredes
 			player.agregar_pared_a_ignorar(paredes[1])
 			
@@ -133,34 +141,35 @@ func _ready():
 			paredes[2].get_child(0).scale.x = 0
 			paredes[2].get_child(0).scale.y = 0
 			
-			paredes[2].global_translate(Vector3((-room_x/2)+room_center.x,2.5,room_center.y+room_z/3))
+			paredes[2].global_translate(Vector3((-room_x/2)+room_center.x,room_y/2,room_center.y+room_z/3))
 			#player ignore paredes
 			player.agregar_pared_a_ignorar(paredes[2])
 		
 		#Tamaño de pared3(pared de abajo)
 		paredes[3].get_child(2).scale.x = room_x
 		paredes[3].get_child(2).scale.y = room_y
+		paredes[3].get_child(2).scale.z = .2
 		#Tamaño de colision
 		paredes[3].get_child(0).scale.x = room_x/2
 		paredes[3].get_child(0).scale.y = room_y/2
-		paredes[3].get_child(0).scale.z = .5
+		paredes[3].get_child(0).scale.z = .1
 		
 		paredes[3].get_child(1).scale.x = room_x/2
 		paredes[3].get_child(1).scale.y = .5
 		paredes[3].get_child(1).scale.z = 3
 		paredes[3].get_child(1).translate_object_local(Vector3(0.0,-2,0.0))
 		#Posicion pared 3
-		paredes[3].global_translate(Vector3(room_center.x,2.5,(room_z/2)+room_center.y))
+		paredes[3].global_translate(Vector3(room_center.x,room_y/2,(room_z/2)+room_center.y))
 		player.agregar_pared_a_ignorar(paredes[3])
 		
 		
 		#Tamaño del piso
 		paredes[4].get_child(1).scale.x = room_x
-		paredes[4].get_child(1).scale.y = 1
+		paredes[4].get_child(1).scale.y = .4
 		paredes[4].get_child(1).scale.z = room_z 
 		#Tamaño de Colision
 		paredes[4].get_child(0).scale.x = room_x/2
-		paredes[4].get_child(0).scale.y = .5
+		paredes[4].get_child(0).scale.y = .2
 		paredes[4].get_child(0).scale.z = room_z/2
 		#Posicion piso
 		paredes[4].global_translate(Vector3(room_center.x,0,room_center.y))
