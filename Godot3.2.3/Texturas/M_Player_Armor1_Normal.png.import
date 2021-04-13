@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/M_Player_Armor1_Normal.png-84b5495ba02a4cad734fddcf9286842f.s3tc.stex"
-path.etc2="res://.import/M_Player_Armor1_Normal.png-84b5495ba02a4cad734fddcf9286842f.etc2.stex"
+path.s3tc="res://.import/M_Player_Armor1_Normal.png-3655e2075735608f7a679fd473d8de49.s3tc.stex"
+path.etc2="res://.import/M_Player_Armor1_Normal.png-3655e2075735608f7a679fd473d8de49.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://M_Player_Armor1_Normal.png"
-dest_files=[ "res://.import/M_Player_Armor1_Normal.png-84b5495ba02a4cad734fddcf9286842f.s3tc.stex", "res://.import/M_Player_Armor1_Normal.png-84b5495ba02a4cad734fddcf9286842f.etc2.stex" ]
+source_file="res://Texturas/M_Player_Armor1_Normal.png"
+dest_files=[ "res://.import/M_Player_Armor1_Normal.png-3655e2075735608f7a679fd473d8de49.s3tc.stex", "res://.import/M_Player_Armor1_Normal.png-3655e2075735608f7a679fd473d8de49.etc2.stex" ]
 
 [params]
 
