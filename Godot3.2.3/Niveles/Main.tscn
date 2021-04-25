@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Imports/Unit.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://Scripts/Player.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/ScriptGenerador.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/Torretilla.gd" type="Script" id=4]
+[ext_resource path="res://Escenas/M_Player_Armor1.tscn" type="PackedScene" id=6]
+
+[sub_resource type="BoxShape" id=1]
+
+[sub_resource type="BoxShape" id=2]
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 100, 1, 100 )
+
+[node name="Plano" type="Spatial"]
+
+[node name="Torretilla" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.002, -5.344 )
+script = ExtResource( 4 )
+
+[node name="Unit2" type="MeshInstance" parent="Torretilla"]
+mesh = ExtResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="Torretilla"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="Player" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.419696, 0 )
+script = ExtResource( 2 )
+
+[node name="SpringArm" type="SpringArm" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 0.642787, 0.766044, 0, -0.766044, 0.642787, 0, 1, 0 )
+spring_length = 10.0
+
+[node name="Camera" type="Camera" parent="Player/SpringArm"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0222187, -0.00304699, 20.0053 )
+current = true
+
+[node name="CollisionShape" type="CollisionShape" parent="Player"]
+transform = Transform( 0.27, 0, 0, 0, 0.814, 0, 0, 0, 0.179, 0, 0.82, 0 )
+shape = SubResource( 2 )
+
+[node name="Area" type="Area" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.419696, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Player/Area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0 )
+shape = SubResource( 3 )
+
+[node name="Mesh" parent="Player" instance=ExtResource( 6 )]
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( -0.146288, -0.963126, 0.225804, -0.691553, 0.262784, 0.67283, -0.707358, -0.0577288, -0.704494, 0, 0, 0.827265 )
+light_energy = 0.66
+shadow_enabled = true
+
+[node name="Generador" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0 )
+script = ExtResource( 3 )

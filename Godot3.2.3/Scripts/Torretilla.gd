@@ -4,10 +4,9 @@ var shootTime = 2.0
 var prevShootTime = 0
 var actualTime = 0
 var unit_mesh
+
 func _ready():
-	unit_mesh = load("res://Unit.obj")
-
-
+	unit_mesh = load("res://Imports/Unit.obj")
 
 func _process(delta):
 	actualTime+=delta
@@ -23,9 +22,11 @@ func shoot():
 	projectileMesh.set_mesh(unit_mesh)
 	var projectileCollision = CollisionShape.new()
 	projectileCollision.set_shape(BoxShape.new())
+	projectileCollision.set_scale(Vector3(.5,.5,.5))
 	projectile.add_child(projectileMesh)
 	projectile.add_child(projectileCollision)
-	projectile.set_script(load("res://projectile.gd"))
+	projectile.set_script(load("res://Scripts/projectile.gd"))
+	projectile.set_scale(Vector3(.4,.4,.4))
 	projectile.set_rotation(get_rotation())
 	projectile.set_translation(get_translation()+(-get_transform().basis.z*2))
 	
