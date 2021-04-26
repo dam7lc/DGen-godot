@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/M_Player_Armor1.glb-55027ab1455059082ca21ed5e509cf26.scn"
+path="res://.import/puerta.glb-99932be02823b14ef2445daf29453a32.scn"
 
 [deps]
 
-source_file="res://Imports/M_Player_Armor1.glb"
-dest_files=[ "res://.import/M_Player_Armor1.glb-55027ab1455059082ca21ed5e509cf26.scn" ]
+source_file="res://puerta.glb"
+dest_files=[ "res://.import/puerta.glb-99932be02823b14ef2445daf29453a32.scn" ]
 
 [params]
 
@@ -16,7 +16,7 @@ nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""
 nodes/storage=0
-nodes/use_legacy_names=true
+nodes/use_legacy_names=false
 materials/location=1
 materials/storage=1
 materials/keep_on_reimport=true
