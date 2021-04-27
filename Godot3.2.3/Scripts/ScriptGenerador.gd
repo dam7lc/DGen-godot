@@ -1,6 +1,6 @@
 extends Spatial
 
-const cuantos = 6
+const cuantos = 20
 var room_center = Vector2(0,0)
 var floor_collision
 var room_x
@@ -9,7 +9,8 @@ var room_z
 var prev_room_z = 0
 const room_y = 1.5
 var player
-var surface_material
+var pared_material
+var piso_material
 
 var array_quad_vertices = [];
 var array_quad_indices = [];
@@ -26,15 +27,16 @@ func _ready():
 		if child.get_script() == load("res://Scripts/Player.gd"):
 			player = child
 	
-	surface_material = load("res://Materials/base_spatial_material.tres")
+	pared_material = load("res://Materials/paredes_material.tres")
+	piso_material = load("res://Materials/piso_material.tres")
 	
 	for j in range(cuantos): #For para cada habitacion
 		
 		#Randomizar tamaño habitacion
 		randomize()
-		room_x = rand_range(5,10)
+		room_x = rand_range(10,20)
 		randomize()
-		room_z = rand_range(5,10)
+		room_z = rand_range(10,20)
 		
 		if j != 0:
 			room_center.x = room_center.x + (room_x) 	
@@ -66,44 +68,47 @@ func _ready():
 					
 			
 			var pared_mesh = make_cube()
-			pared_mesh.set_surface_material(0,surface_material)
+			pared_mesh.set_surface_material(0, pared_material)
 			paredes[i].add_child(pared_mesh)	
 			if paredes[i].get_script() == load("res://Scripts/Area_pared_inferior.gd"):
 				paredes[i].mesh_added()
 			add_child(paredes[i])
 			
+		#Termina For
 		#Si la habitacion es mas pequeña generar paredes adicionales
 		
 		if room_z < prev_room_z : 
 			var dif = prev_room_z - room_z
-			var pared = StaticBody.new()
+			var paredrelleno1 = StaticBody.new()
 			var pared_colision = CollisionShape.new()
 			var pared_mesh = make_cube()
-			pared_mesh.set_surface_material(0,surface_material)
-			pared.add_child(pared_mesh)
 			var colshape = BoxShape.new()
+			
+			pared_mesh.set_surface_material(0, pared_material)
+			paredrelleno1.add_child(pared_mesh)
 			colshape.set_extents(Vector3(1,1,1))
 			pared_colision.set_shape(colshape)
-			pared.add_child(pared_colision)
-			paredes.append(pared)
-			pared.set_scale(Vector3(.1,room_y,dif/2))
-			pared.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y+room_z+dif/2)))
-			add_child(pared)
+			paredrelleno1.add_child(pared_colision)
+			paredes.append(paredrelleno1)
+			paredrelleno1.set_scale(Vector3(.1,room_y,dif/2))
+			paredrelleno1.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y+room_z+dif/2)))
+			add_child(paredrelleno1)
 			
 			
-			var pared2 = StaticBody.new()
+			var paredrelleno2 = StaticBody.new()
 			var pared_colision2 = CollisionShape.new()
 			var pared_mesh2 = make_cube()
-			pared_mesh2.set_surface_material(0,surface_material)
-			pared2.add_child(pared_mesh2)
 			var colshape2 = BoxShape.new()
+			
+			pared_mesh2.set_surface_material(0, pared_material)
+			paredrelleno2.add_child(pared_mesh2)
 			colshape2.set_extents(Vector3(1,1,1))
 			pared_colision2.set_shape(colshape2)
-			pared2.add_child(pared_colision2)
-			paredes.append(pared2)
-			pared2.set_scale(Vector3(.1,room_y,dif/2))
-			pared2.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y-room_z-dif/2)))
-			add_child(pared2)
+			paredrelleno2.add_child(pared_colision2)
+			paredes.append(paredrelleno2)
+			paredrelleno2.set_scale(Vector3(.1,room_y,dif/2))
+			paredrelleno2.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y-room_z-dif/2)))
+			add_child(paredrelleno2)
 		
 		#Tamaño de pared0(pared de arriba)
 		#Tamaño del mesh
@@ -196,6 +201,7 @@ func _ready():
 		paredes[4].get_child(1).scale.x = room_x
 		paredes[4].get_child(1).scale.y = .2
 		paredes[4].get_child(1).scale.z = room_z 
+		paredes[4].get_child(1).set_surface_material(0, piso_material)
 		#Tamaño de Colision
 		paredes[4].get_child(0).scale.x = room_x
 		paredes[4].get_child(0).scale.y = .2
