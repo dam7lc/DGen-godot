@@ -150,8 +150,8 @@ func process_input(delta):
 			if (actual_time-last_dash_time) > 1000:
 				can_dash = true
 			if can_dash:
-				vel += -cam_xform.basis.z * input_movement_vector.y * 40
-				vel += cam_xform.basis.x * input_movement_vector.x * 40
+				vel += -cam_xform.basis.z * input_movement_vector.y * 80
+				vel += cam_xform.basis.x * input_movement_vector.x * 80
 				last_dash_time = OS.get_ticks_msec()
 				can_dash = false
 			

@@ -2,6 +2,7 @@ extends StaticBody
 var area
 var mesh
 var new_material
+var color
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -19,16 +20,17 @@ func area_added():
 func mesh_added():
 	mesh = get_child(2)
 	new_material = mesh.get_surface_material(0).duplicate()
+	color = new_material.get("albedo_color")
 	mesh.set_surface_material(0, new_material)
 	
 func translucir(body):
 	if body.get_script() == load("res://Scripts/Player.gd"):
 		get_child(2).get_surface_material(0).set("flags_transparent", true)
-		get_child(2).get_surface_material(0).set("albedo_color", Color(0,0,.2,.8))
+		get_child(2).get_surface_material(0).set("albedo_color", Color(color.r, color.g, color.b, .5))
 	
 func opacar(body):
 	if body.get_script() == load("res://Scripts/Player.gd"):
-		get_child(2).get_surface_material(0).set("albedo_color", Color(0,0,.2,1))
+		get_child(2).get_surface_material(0).set("albedo_color", Color(color.r, color.g, color.b, 1))
 		get_child(2).get_surface_material(0).set("flags_transparent", false)
 		
 
