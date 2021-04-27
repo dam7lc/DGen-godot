@@ -110,6 +110,10 @@ func _ready():
 			paredrelleno2.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y-room_z-dif/2)))
 			add_child(paredrelleno2)
 		
+		var puerta = ResourceLoader.load("res://Escenas/puerta.tscn").instance()
+		add_child(puerta)
+		puerta.rotate_y(1.57)
+		puerta.global_translate(Vector3(room_x+room_center.x,0.3,room_center.y))
 		#Tamaño de pared0(pared de arriba)
 		#Tamaño del mesh
 		paredes[0].get_child(1).scale.x = room_x
