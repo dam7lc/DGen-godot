@@ -2,7 +2,6 @@ extends Spatial
 
 const cuantos = 3
 var room_center = Vector2(0,0)
-var floor_collision
 var room_x
 var prev_room_x = 0
 var room_z
@@ -11,14 +10,7 @@ const room_y = 1.5
 var player
 var pared_material
 var piso_material
-
-var array_quad_vertices = [];
-var array_quad_indices = [];
-
-var dictionary_check_quad_vertices = {};
-
-const CUBE_SIZE = 1;
-
+var ancho_pared: float = .1
 
 #Llamado cuando se inicializa el objeto
 func _ready():
@@ -34,9 +26,9 @@ func _ready():
 		
 		#Randomizar tamaño habitacion
 		randomize()
-		room_x = rand_range(10,20)
+		room_x = rand_range(8,15)
 		randomize()
-		room_z = rand_range(10,20)
+		room_z = rand_range(8,15)
 		
 		if j != 0:
 			room_center.x = room_center.x + (room_x) 	
@@ -67,7 +59,8 @@ func _ready():
 				paredes[i].area_added()
 					
 			
-			var pared_mesh = make_cube()
+			var pared_mesh = MeshInstance.new()
+			pared_mesh.set_mesh(load("res://Imports/Unit.obj"))
 			pared_mesh.set_surface_material(0, pared_material)
 			paredes[i].add_child(pared_mesh)	
 			if paredes[i].get_script() == load("res://Scripts/Area_pared_inferior.gd"):
@@ -81,32 +74,32 @@ func _ready():
 			var dif = prev_room_z - room_z
 			var paredrelleno1 = StaticBody.new()
 			var pared_colision = CollisionShape.new()
-			var pared_mesh = make_cube()
+			var pared_mesh = MeshInstance.new()
 			var colshape = BoxShape.new()
-			
+			pared_mesh.set_mesh(load("res://Imports/Unit.obj"))
 			pared_mesh.set_surface_material(0, pared_material)
 			paredrelleno1.add_child(pared_mesh)
 			colshape.set_extents(Vector3(1,1,1))
 			pared_colision.set_shape(colshape)
 			paredrelleno1.add_child(pared_colision)
 			paredes.append(paredrelleno1)
-			paredrelleno1.set_scale(Vector3(.1,room_y,dif/2))
+			paredrelleno1.set_scale(Vector3(ancho_pared,room_y,dif/2))
 			paredrelleno1.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y+room_z+dif/2)))
 			add_child(paredrelleno1)
 			
 			
 			var paredrelleno2 = StaticBody.new()
 			var pared_colision2 = CollisionShape.new()
-			var pared_mesh2 = make_cube()
+			var pared_mesh2 = MeshInstance.new()
 			var colshape2 = BoxShape.new()
-			
+			pared_mesh2.set_mesh(load("res://Imports/Unit.obj"))
 			pared_mesh2.set_surface_material(0, pared_material)
 			paredrelleno2.add_child(pared_mesh2)
 			colshape2.set_extents(Vector3(1,1,1))
 			pared_colision2.set_shape(colshape2)
 			paredrelleno2.add_child(pared_colision2)
 			paredes.append(paredrelleno2)
-			paredrelleno2.set_scale(Vector3(.1,room_y,dif/2))
+			paredrelleno2.set_scale(Vector3(ancho_pared,room_y,dif/2))
 			paredrelleno2.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y-room_z-dif/2)))
 			add_child(paredrelleno2)
 		
@@ -119,11 +112,11 @@ func _ready():
 		#Tamaño del mesh
 		paredes[0].get_child(1).scale.x = room_x
 		paredes[0].get_child(1).scale.y = room_y
-		paredes[0].get_child(1).scale.z = .1
+		paredes[0].get_child(1).scale.z = ancho_pared
 		#Tamaño de la colision
 		paredes[0].get_child(0).scale.x = room_x
 		paredes[0].get_child(0).scale.y = room_y
-		paredes[0].get_child(0).scale.z = .1
+		paredes[0].get_child(0).scale.z = ancho_pared
 		#Posicion pared0
 		paredes[0].global_translate(Vector3(room_center.x,room_y,(-room_z)+room_center.y))
 		
@@ -134,39 +127,39 @@ func _ready():
 			
 			#Tamaño de pared1(pared de la izquierda)
 			#Tamaño del mesh
-			paredes[1].get_child(1).scale.z = room_z/3
+			paredes[1].get_child(1).scale.z = room_z/2-.5
 			paredes[1].get_child(1).scale.y = room_y
-			paredes[1].get_child(1).scale.x = .1
+			paredes[1].get_child(1).scale.x = ancho_pared
 			#Tamaño de Collision
-			paredes[1].get_child(0).scale.x = .1
-			paredes[1].get_child(0).scale.z = room_z/3
+			paredes[1].get_child(0).scale.x = ancho_pared
+			paredes[1].get_child(0).scale.z = room_z/2-.5
 			paredes[1].get_child(0).scale.y = room_y
 			#Posicion pared1
-			paredes[1].global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y-room_z/1.5)))
+			paredes[1].global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y-room_z/2)-.5))
 			#player ignore paredes
 			player.agregar_pared_a_ignorar(paredes[1])
 			
 			#Tamaño de pared2(pared de la izquierda 2)
 			#Tamaño del mesh
-			paredes[2].get_child(1).scale.z = room_z/3
+			paredes[2].get_child(1).scale.z = room_z/2-.5
 			paredes[2].get_child(1).scale.y = room_y
-			paredes[2].get_child(1).scale.x = .1
+			paredes[2].get_child(1).scale.x = ancho_pared
 			#Tamaño de Collision
-			paredes[2].get_child(0).scale.z = room_z/3
+			paredes[2].get_child(0).scale.z = room_z/2-.5
 			paredes[2].get_child(0).scale.y = room_y
-			paredes[2].get_child(0).scale.x = .1
+			paredes[2].get_child(0).scale.x = ancho_pared
 			#Posicion pared2
-			paredes[2].global_translate(Vector3((-room_x)+room_center.x,room_y,room_center.y+room_z/1.5))
+			paredes[2].global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y+room_z/2)+.5))
 			#player ignore paredes
 			player.agregar_pared_a_ignorar(paredes[2])
 			
 		else:
 			paredes[1].get_child(1).scale.z = room_z
 			paredes[1].get_child(1).scale.y = room_y
-			paredes[1].get_child(1).scale.x = .1
+			paredes[1].get_child(1).scale.x = ancho_pared
 			
 			paredes[1].get_child(0).scale.z = room_z
-			paredes[1].get_child(0).scale.x = .1
+			paredes[1].get_child(0).scale.x = ancho_pared
 			paredes[1].get_child(0).scale.y = room_y
 			
 			paredes[1].global_translate(Vector3((-room_x)+room_center.x,room_y,room_center.y))
@@ -187,11 +180,11 @@ func _ready():
 		#Tamaño de pared3(pared de abajo)
 		paredes[3].get_child(2).scale.x = room_x
 		paredes[3].get_child(2).scale.y = room_y
-		paredes[3].get_child(2).scale.z = .1
+		paredes[3].get_child(2).scale.z = ancho_pared
 		#Tamaño de colision
 		paredes[3].get_child(0).scale.x = room_x
 		paredes[3].get_child(0).scale.y = room_y
-		paredes[3].get_child(0).scale.z = .1
+		paredes[3].get_child(0).scale.z = ancho_pared
 		
 		paredes[3].get_child(1).scale.x = room_x
 		paredes[3].get_child(1).scale.y = .5
@@ -224,79 +217,3 @@ func _ready():
 		
 	
 
-func make_cube():
-	array_quad_vertices = [];
-	array_quad_indices = [];
-	dictionary_check_quad_vertices = {};
-	
-	var result_mesh = Mesh.new();
-	var testMesh = MeshInstance.new()
-	var surface_tool = SurfaceTool.new();
-	
-	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES);
-	
-	var vert_north_topright = Vector3(-CUBE_SIZE, CUBE_SIZE, CUBE_SIZE);
-	var vert_north_topleft = Vector3(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE);
-	var vert_north_bottomleft = Vector3(CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE);
-	var vert_north_bottomright = Vector3(-CUBE_SIZE, CUBE_SIZE, -CUBE_SIZE);
-	
-	var vert_south_topright = Vector3(-CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE);
-	var vert_south_topleft = Vector3(CUBE_SIZE, -CUBE_SIZE, CUBE_SIZE);
-	var vert_south_bottomleft = Vector3(CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE);
-	var vert_south_bottomright = Vector3(-CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE);
-	
-	
-	add_quad(vert_south_topright, vert_south_topleft, vert_south_bottomleft, vert_south_bottomright);
-	add_quad(vert_north_topright, vert_north_bottomright, vert_north_bottomleft, vert_north_topleft);
-	
-	add_quad(vert_north_bottomleft, vert_north_bottomright, vert_south_bottomright, vert_south_bottomleft);
-	add_quad(vert_north_topleft, vert_south_topleft, vert_south_topright, vert_north_topright);
-	
-	add_quad(vert_north_topright, vert_south_topright, vert_south_bottomright, vert_north_bottomright);
-	add_quad(vert_north_topleft, vert_north_bottomleft, vert_south_bottomleft, vert_south_topleft);
-	# ============================================
-	
-	for vertex in array_quad_vertices:
-		surface_tool.add_vertex(vertex);
-	for index in array_quad_indices:
-		surface_tool.add_index(index);
-	
-	surface_tool.generate_normals();
-	
-	result_mesh = surface_tool.commit();
-	testMesh.set_mesh(result_mesh)
-	return testMesh
-
-
-func add_quad(point_1, point_2, point_3, point_4):
-	
-	var vertex_index_one = -1;
-	var vertex_index_two = -1;
-	var vertex_index_three = -1;
-	var vertex_index_four = -1;
-	
-	vertex_index_one = _add_or_get_vertex_from_array(point_1);
-	vertex_index_two = _add_or_get_vertex_from_array(point_2);
-	vertex_index_three = _add_or_get_vertex_from_array(point_3);
-	vertex_index_four = _add_or_get_vertex_from_array(point_4);
-	
-	array_quad_indices.append(vertex_index_one)
-	array_quad_indices.append(vertex_index_two)
-	array_quad_indices.append(vertex_index_three)
-	
-	array_quad_indices.append(vertex_index_one)
-	array_quad_indices.append(vertex_index_three)
-	array_quad_indices.append(vertex_index_four)
-
-
-func _add_or_get_vertex_from_array(vertex):
-	if dictionary_check_quad_vertices.has(vertex) == true:
-		return dictionary_check_quad_vertices[vertex];
-	
-	else:
-		array_quad_vertices.append(vertex);
-		
-		dictionary_check_quad_vertices[vertex] = array_quad_vertices.size()-1;
-		return array_quad_vertices.size()-1;
-
-	

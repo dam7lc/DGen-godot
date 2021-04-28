@@ -18,9 +18,9 @@ func _process(delta):
 	
 func shoot():
 	var projectile = RigidBody.new()
-	var projectileMesh = MeshInstance.new()
-	projectileMesh.set_mesh(unit_mesh)
+	var projectileMesh = MeshInstance.new()	
 	var projectileCollision = CollisionShape.new()
+	projectileMesh.set_mesh(unit_mesh)
 	projectileCollision.set_shape(BoxShape.new())
 	projectileCollision.set_scale(Vector3(.5,.5,.5))
 	projectile.add_child(projectileMesh)
