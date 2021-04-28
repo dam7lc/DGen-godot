@@ -2,16 +2,16 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/puerta.glb-5fdc7f76cdc4766bb65e3dde7174f7f7.scn"
+path="res://.import/puerta2.glb-5dad6d8f2a7ac01c77e888e95a24d0b7.scn"
 
 [deps]
 
-source_file="res://Imports/puerta.glb"
-dest_files=[ "res://.import/puerta.glb-5fdc7f76cdc4766bb65e3dde7174f7f7.scn" ]
+source_file="res://Imports/puerta2.glb"
+dest_files=[ "res://.import/puerta2.glb-5dad6d8f2a7ac01c77e888e95a24d0b7.scn" ]
 
 [params]
 
-nodes/root_type="KinematicBody"
+nodes/root_type="Spatial"
 nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""

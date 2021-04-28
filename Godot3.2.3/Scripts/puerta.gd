@@ -1,4 +1,4 @@
-extends StaticBody
+extends KinematicBody
 var area
 var anim_player
 
@@ -9,14 +9,14 @@ var anim_player
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	area = get_child(3)
+	area = get_node("Area")
 	anim_player = get_node("AnimationPlayer")
-	print(area)
 	area.connect("body_entered", self, "jugador_entro")
 	area.connect("body_exited", self, "jugador_sale")
 	anim_player.stop(true)
+	
 func jugador_entro(body):
-	if body.get_script() == load("res://Scripts/Player.gd"):
+	if body.get_script() == load("res://Scripts/Player.gd") && area.overlaps_body(body):
 		anim_player.play("Abrir")
 	
 func jugador_sale(body):

@@ -1,6 +1,6 @@
 extends Spatial
 
-const cuantos = 20
+const cuantos = 3
 var room_center = Vector2(0,0)
 var floor_collision
 var room_x
@@ -110,7 +110,8 @@ func _ready():
 			paredrelleno2.global_translate(Vector3((-room_x)+room_center.x,room_y,(room_center.y-room_z-dif/2)))
 			add_child(paredrelleno2)
 		
-		var puerta = ResourceLoader.load("res://Escenas/puerta.tscn").instance()
+		var puerta = load("res://Escenas/puerta.tscn").instance()
+		
 		add_child(puerta)
 		puerta.rotate_y(1.57)
 		puerta.global_translate(Vector3(room_x+room_center.x,0.3,room_center.y))
