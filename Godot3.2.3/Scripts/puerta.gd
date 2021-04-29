@@ -1,6 +1,7 @@
 extends KinematicBody
 var area: Area
 var anim_player: AnimationPlayer
+var colision: CollisionShape
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -11,6 +12,7 @@ var anim_player: AnimationPlayer
 func _ready():
 	area = get_node("Area")
 	anim_player = get_node("AnimationPlayer")
+	colision = get_node("CollisionShape")
 	area.connect("body_entered", self, "jugador_entro")
 	area.connect("body_exited", self, "jugador_sale")
 	anim_player.stop(true)
@@ -18,6 +20,7 @@ func _ready():
 	
 func jugador_entro(body):
 	if body.get_script() == load("res://Scripts/Player.gd") && area.overlaps_body(body):
+		colision.disabled = true
 		if anim_player.is_playing():
 			anim_player.queue("Abrir")
 		else:
@@ -26,6 +29,7 @@ func jugador_entro(body):
 	
 func jugador_sale(body):
 	if body.get_script() == load("res://Scripts/Player.gd"):
+		colision.disabled = false
 		if anim_player.is_playing():
 			anim_player.queue("Cerrar")
 		else:

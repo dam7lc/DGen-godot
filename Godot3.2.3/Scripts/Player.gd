@@ -13,6 +13,8 @@ var space_state
 var array_paredes_a_ignorar
 var can_dash
 var last_dash_time = 0
+var mouse_at_x = 0
+var mouse_at_y = 0
 
 const GRAVITY = -24.8
 var vel = Vector3()
@@ -83,6 +85,8 @@ func _input(event):
 			ignore.append(self)
 			var result = space_state.intersect_ray(from, to, ignore, 0x7FFFFFFF, true, true)
 			if(result):
+				mouse_at_x = result.position.x
+				mouse_at_y = result.position.z
 				player_mesh.look_at(Vector3(result.position.x, -.8, result.position.z), Vector3(0,1,0))
 			
 		
@@ -150,6 +154,7 @@ func process_input(delta):
 			if (actual_time-last_dash_time) > 1000:
 				can_dash = true
 			if can_dash:
+				$AnimationTree.set("parameters/OneShot/active", true)
 				vel += -cam_xform.basis.z * input_movement_vector.y * 80
 				vel += cam_xform.basis.x * input_movement_vector.x * 80
 				last_dash_time = OS.get_ticks_msec()
@@ -164,8 +169,16 @@ func process_input(delta):
 
 func process_movement(delta):
 	dir.y = 0
+	
+	var mouse = Vector2(mouse_at_x, mouse_at_y).normalized()
+	var rotation = Vector2(-1,0).angle_to_point(mouse)
+	var anim_value = Vector2(dir.x, dir.z).rotated(rotation)
+	
+	$AnimationTree.set("parameters/Direction/blend_position", anim_value)
+	print(anim_value)
+	
 	dir = dir.normalized()
-
+	
 	vel.y += delta * GRAVITY
 
 	var hvel = vel
