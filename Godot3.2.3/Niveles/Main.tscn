@@ -1,70 +1,87 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=29 format=2]
 
-[ext_resource path="res://Animaciones/RunRight-loop.anim" type="Animation" id=1]
-[ext_resource path="res://Scripts/Player.gd" type="Script" id=2]
+[ext_resource path="res://Animaciones/RunLeft-loop.anim" type="Animation" id=1]
+[ext_resource path="res://Scripts/Jugador.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/ScriptGenerador.gd" type="Script" id=3]
 [ext_resource path="res://Animaciones/FrontRoll.anim" type="Animation" id=4]
-[ext_resource path="res://Animaciones/RunLeft-loop.anim" type="Animation" id=5]
+[ext_resource path="res://Animaciones/RunForwardRight-loop.anim" type="Animation" id=5]
 [ext_resource path="res://Escenas/M_Player_Armor1.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Animaciones/RunForward-loop.anim" type="Animation" id=7]
-[ext_resource path="res://Animaciones/Idle-loop.anim" type="Animation" id=8]
+[ext_resource path="res://Animaciones/RunRight-loop.anim" type="Animation" id=7]
+[ext_resource path="res://Animaciones/RunForward-loop.anim" type="Animation" id=8]
+[ext_resource path="res://Animaciones/RunForwardLeft-loop.anim" type="Animation" id=9]
+[ext_resource path="res://Animaciones/RunBackwardsLeft-loop.anim" type="Animation" id=10]
+[ext_resource path="res://Animaciones/RunBackwardsRight-loop.anim" type="Animation" id=11]
+[ext_resource path="res://Animaciones/Idle-loop.anim" type="Animation" id=12]
+[ext_resource path="res://Animaciones/RunBackwards-loop.anim" type="Animation" id=13]
 
-[sub_resource type="BoxShape" id=14]
+[sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.25, 0.8, 0.2 )
 
 [sub_resource type="BoxShape" id=2]
 extents = Vector3( 100, 1, 100 )
 
-[sub_resource type="AnimationNodeAnimation" id=3]
+[sub_resource type="AnimationNodeAnimation" id=14]
 animation = "FrontRoll"
 
-[sub_resource type="AnimationNodeAnimation" id=4]
+[sub_resource type="AnimationNodeAnimation" id=3]
 animation = "Idle-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=5]
+[sub_resource type="AnimationNodeAnimation" id=4]
 animation = "RunForward-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=6]
+[sub_resource type="AnimationNodeAnimation" id=5]
 animation = "RunLeft-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=7]
+[sub_resource type="AnimationNodeAnimation" id=6]
 animation = "RunRight-loop"
 
+[sub_resource type="AnimationNodeAnimation" id=7]
+animation = "RunBackwards-loop"
+
 [sub_resource type="AnimationNodeAnimation" id=8]
-animation = "RunForward-loop"
+animation = "RunForwardRight-loop"
 
-[sub_resource type="AnimationNodeBlendSpace2D" id=9]
-blend_point_0/node = SubResource( 4 )
+[sub_resource type="AnimationNodeAnimation" id=9]
+animation = "RunForwardLeft-loop"
+
+[sub_resource type="AnimationNodeAnimation" id=10]
+animation = "RunBackwardsLeft-loop"
+
+[sub_resource type="AnimationNodeAnimation" id=11]
+animation = "RunBackwardsRight-loop"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id=12]
+blend_point_0/node = SubResource( 3 )
 blend_point_0/pos = Vector2( 0, 0 )
-blend_point_1/node = SubResource( 5 )
+blend_point_1/node = SubResource( 4 )
 blend_point_1/pos = Vector2( 0, 1 )
-blend_point_2/node = SubResource( 6 )
+blend_point_2/node = SubResource( 5 )
 blend_point_2/pos = Vector2( -1, 0 )
-blend_point_3/node = SubResource( 7 )
+blend_point_3/node = SubResource( 6 )
 blend_point_3/pos = Vector2( 1, 0 )
-blend_point_4/node = SubResource( 8 )
+blend_point_4/node = SubResource( 7 )
 blend_point_4/pos = Vector2( 0, -1 )
+blend_point_5/node = SubResource( 8 )
+blend_point_5/pos = Vector2( 1, 1 )
+blend_point_6/node = SubResource( 9 )
+blend_point_6/pos = Vector2( -1, 1 )
+blend_point_7/node = SubResource( 10 )
+blend_point_7/pos = Vector2( -1, -1 )
+blend_point_8/node = SubResource( 11 )
+blend_point_8/pos = Vector2( 1, -1 )
 
-[sub_resource type="AnimationNodeOneShot" id=10]
-
-[sub_resource type="AnimationNodeTimeScale" id=11]
-
-[sub_resource type="AnimationNodeTimeScale" id=12]
+[sub_resource type="AnimationNodeOneShot" id=15]
 
 [sub_resource type="AnimationNodeBlendTree" id=13]
-graph_offset = Vector2( -314.619, 101.5 )
-nodes/Animation/node = SubResource( 3 )
-nodes/Animation/position = Vector2( 100, 320 )
-nodes/Direction/node = SubResource( 9 )
-nodes/Direction/position = Vector2( 0, 160 )
-nodes/OneShot/node = SubResource( 10 )
-nodes/OneShot/position = Vector2( 500, 160 )
-nodes/direction_scale/node = SubResource( 11 )
-nodes/direction_scale/position = Vector2( 260, 60 )
-nodes/output/position = Vector2( 680, 160 )
-nodes/roll_scale/node = SubResource( 12 )
-nodes/roll_scale/position = Vector2( 320, 280 )
-node_connections = [ "roll_scale", 0, "Animation", "direction_scale", 0, "Direction", "OneShot", 0, "direction_scale", "OneShot", 1, "roll_scale", "output", 0, "OneShot" ]
+graph_offset = Vector2( -263, 138 )
+nodes/Animation/node = SubResource( 14 )
+nodes/Animation/position = Vector2( 180, 340 )
+nodes/Direction/node = SubResource( 12 )
+nodes/Direction/position = Vector2( 40, 160 )
+nodes/OneShot/node = SubResource( 15 )
+nodes/OneShot/position = Vector2( 360, 160 )
+nodes/output/position = Vector2( 600, 180 )
+node_connections = [ "OneShot", 0, "Direction", "OneShot", 1, "Animation", "output", 0, "OneShot" ]
 
 [node name="Plano" type="Spatial"]
 
@@ -82,7 +99,7 @@ current = true
 
 [node name="CollisionShape" type="CollisionShape" parent="Player"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.815234, 0 )
-shape = SubResource( 14 )
+shape = SubResource( 1 )
 
 [node name="Area" type="Area" parent="Player"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.419696, 0 )
@@ -96,19 +113,22 @@ shape = SubResource( 2 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
 root_node = NodePath("../Mesh")
 anims/FrontRoll = ExtResource( 4 )
-anims/Idle-loop = ExtResource( 8 )
-anims/RunForward-loop = ExtResource( 7 )
-anims/RunLeft-loop = ExtResource( 5 )
-anims/RunRight-loop = ExtResource( 1 )
+anims/Idle-loop = ExtResource( 12 )
+anims/RunBackwards-loop = ExtResource( 13 )
+anims/RunBackwardsLeft-loop = ExtResource( 10 )
+anims/RunBackwardsRight-loop = ExtResource( 11 )
+anims/RunForward-loop = ExtResource( 8 )
+anims/RunForwardLeft-loop = ExtResource( 9 )
+anims/RunForwardRight-loop = ExtResource( 5 )
+anims/RunLeft-loop = ExtResource( 1 )
+anims/RunRight-loop = ExtResource( 7 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
 tree_root = SubResource( 13 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/Direction/blend_position = Vector2( 0, 0 )
+parameters/Direction/blend_position = Vector2( 0, -0.0258621 )
 parameters/OneShot/active = false
-parameters/direction_scale/scale = 1.0
-parameters/roll_scale/scale = 1.0
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( -0.146288, -0.963126, 0.225804, -0.691553, 0.262784, 0.67283, -0.707358, -0.0577288, -0.704494, 0, 0, 0.827265 )

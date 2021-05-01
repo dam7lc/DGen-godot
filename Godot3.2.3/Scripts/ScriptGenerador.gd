@@ -16,7 +16,7 @@ var ancho_pared: float = .1
 func _ready():
 	
 	for child in get_parent().get_children(): #Obtener referencia al player para ignorar colision de la camara con paredes
-		if child.get_script() == load("res://Scripts/Player.gd"):
+		if child.get_script() == load("res://Scripts/Jugador.gd"):
 			player = child
 	
 	pared_material = load("res://Materials/paredes_material.tres")

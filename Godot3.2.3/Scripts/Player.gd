@@ -155,8 +155,8 @@ func process_input(delta):
 				can_dash = true
 			if can_dash:
 				$AnimationTree.set("parameters/OneShot/active", true)
-				vel += -cam_xform.basis.z * input_movement_vector.y * 80
-				vel += cam_xform.basis.x * input_movement_vector.x * 80
+				vel += -cam_xform.basis.z * input_movement_vector.y * 20
+				vel += cam_xform.basis.x * input_movement_vector.x * 20
 				last_dash_time = OS.get_ticks_msec()
 				can_dash = false
 			
@@ -171,8 +171,9 @@ func process_movement(delta):
 	dir.y = 0
 	
 	var mouse = Vector2(mouse_at_x, mouse_at_y).normalized()
-	var rotation = Vector2(-1,0).angle_to_point(mouse)
-	var anim_value = Vector2(dir.x, dir.z).rotated(rotation)
+	var rotation = -(Vector2(0,-1).angle_to(mouse))
+	var anim_value = (Vector2(dir.x, dir.z).rotated(rotation)*Vector2(1,-1))
+	
 	
 	$AnimationTree.set("parameters/Direction/blend_position", anim_value)
 	print(anim_value)

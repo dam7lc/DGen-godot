@@ -19,7 +19,7 @@ func _ready():
 	anim_player.playback_speed = 3.0
 	
 func jugador_entro(body):
-	if body.get_script() == load("res://Scripts/Player.gd") && area.overlaps_body(body):
+	if body.get_script() == load("res://Scripts/Jugador.gd") && area.overlaps_body(body):
 		colision.disabled = true
 		if anim_player.is_playing():
 			anim_player.queue("Abrir")
@@ -28,7 +28,7 @@ func jugador_entro(body):
 		
 	
 func jugador_sale(body):
-	if body.get_script() == load("res://Scripts/Player.gd"):
+	if body.get_script() == load("res://Scripts/Jugador.gd"):
 		colision.disabled = false
 		if anim_player.is_playing():
 			anim_player.queue("Cerrar")

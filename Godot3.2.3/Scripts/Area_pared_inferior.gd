@@ -24,12 +24,12 @@ func mesh_added():
 	mesh.set_surface_material(0, new_material)
 	
 func translucir(body):
-	if body.get_script() == load("res://Scripts/Player.gd"):
+	if body.get_script() == load("res://Scripts/Jugador.gd"):
 		get_child(2).get_surface_material(0).set("flags_transparent", true)
 		get_child(2).get_surface_material(0).set("albedo_color", Color(color.r, color.g, color.b, .5))
 	
 func opacar(body):
-	if body.get_script() == load("res://Scripts/Player.gd"):
+	if body.get_script() == load("res://Scripts/Jugador.gd"):
 		get_child(2).get_surface_material(0).set("albedo_color", Color(color.r, color.g, color.b, 1))
 		get_child(2).get_surface_material(0).set("flags_transparent", false)
 		
