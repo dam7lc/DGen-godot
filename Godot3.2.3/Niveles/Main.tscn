@@ -20,65 +20,65 @@ extents = Vector3( 0.25, 0.8, 0.2 )
 [sub_resource type="BoxShape" id=2]
 extents = Vector3( 100, 1, 100 )
 
-[sub_resource type="AnimationNodeAnimation" id=14]
+[sub_resource type="AnimationNodeAnimation" id=3]
 animation = "FrontRoll"
 
-[sub_resource type="AnimationNodeAnimation" id=3]
+[sub_resource type="AnimationNodeAnimation" id=4]
 animation = "Idle-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=4]
+[sub_resource type="AnimationNodeAnimation" id=5]
 animation = "RunForward-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=5]
+[sub_resource type="AnimationNodeAnimation" id=6]
 animation = "RunLeft-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=6]
+[sub_resource type="AnimationNodeAnimation" id=7]
 animation = "RunRight-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=7]
+[sub_resource type="AnimationNodeAnimation" id=8]
 animation = "RunBackwards-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=8]
+[sub_resource type="AnimationNodeAnimation" id=9]
 animation = "RunForwardRight-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=9]
+[sub_resource type="AnimationNodeAnimation" id=10]
 animation = "RunForwardLeft-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=10]
+[sub_resource type="AnimationNodeAnimation" id=11]
 animation = "RunBackwardsLeft-loop"
 
-[sub_resource type="AnimationNodeAnimation" id=11]
+[sub_resource type="AnimationNodeAnimation" id=12]
 animation = "RunBackwardsRight-loop"
 
-[sub_resource type="AnimationNodeBlendSpace2D" id=12]
-blend_point_0/node = SubResource( 3 )
+[sub_resource type="AnimationNodeBlendSpace2D" id=13]
+blend_point_0/node = SubResource( 4 )
 blend_point_0/pos = Vector2( 0, 0 )
-blend_point_1/node = SubResource( 4 )
+blend_point_1/node = SubResource( 5 )
 blend_point_1/pos = Vector2( 0, 1 )
-blend_point_2/node = SubResource( 5 )
+blend_point_2/node = SubResource( 6 )
 blend_point_2/pos = Vector2( -1, 0 )
-blend_point_3/node = SubResource( 6 )
+blend_point_3/node = SubResource( 7 )
 blend_point_3/pos = Vector2( 1, 0 )
-blend_point_4/node = SubResource( 7 )
+blend_point_4/node = SubResource( 8 )
 blend_point_4/pos = Vector2( 0, -1 )
-blend_point_5/node = SubResource( 8 )
+blend_point_5/node = SubResource( 9 )
 blend_point_5/pos = Vector2( 1, 1 )
-blend_point_6/node = SubResource( 9 )
+blend_point_6/node = SubResource( 10 )
 blend_point_6/pos = Vector2( -1, 1 )
-blend_point_7/node = SubResource( 10 )
+blend_point_7/node = SubResource( 11 )
 blend_point_7/pos = Vector2( -1, -1 )
-blend_point_8/node = SubResource( 11 )
+blend_point_8/node = SubResource( 12 )
 blend_point_8/pos = Vector2( 1, -1 )
 
-[sub_resource type="AnimationNodeOneShot" id=15]
+[sub_resource type="AnimationNodeOneShot" id=14]
 
-[sub_resource type="AnimationNodeBlendTree" id=13]
+[sub_resource type="AnimationNodeBlendTree" id=15]
 graph_offset = Vector2( -263, 138 )
-nodes/Animation/node = SubResource( 14 )
+nodes/Animation/node = SubResource( 3 )
 nodes/Animation/position = Vector2( 180, 340 )
-nodes/Direction/node = SubResource( 12 )
+nodes/Direction/node = SubResource( 13 )
 nodes/Direction/position = Vector2( 40, 160 )
-nodes/OneShot/node = SubResource( 15 )
+nodes/OneShot/node = SubResource( 14 )
 nodes/OneShot/position = Vector2( 360, 160 )
 nodes/output/position = Vector2( 600, 180 )
 node_connections = [ "OneShot", 0, "Direction", "OneShot", 1, "Animation", "output", 0, "OneShot" ]
@@ -124,7 +124,7 @@ anims/RunLeft-loop = ExtResource( 1 )
 anims/RunRight-loop = ExtResource( 7 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
-tree_root = SubResource( 13 )
+tree_root = SubResource( 15 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/Direction/blend_position = Vector2( 0, -0.0258621 )

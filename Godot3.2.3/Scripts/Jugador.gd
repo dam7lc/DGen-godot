@@ -6,6 +6,7 @@ var velocity: Vector3 = Vector3.ZERO
 var acceleration: float = 10
 var vertical_velocity: float = 0
 var gravity: float = 20
+var dash_cooldown: float = 2000
 var last_dash_time = 0
 var can_dash = true
 var array_paredes_a_ignorar: Array
@@ -61,7 +62,7 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_pressed("dash"):
 		var actual_time = OS.get_ticks_msec()
-		if (actual_time-last_dash_time) > 1000:
+		if (actual_time-last_dash_time) > dash_cooldown:
 			can_dash = true
 		if can_dash:
 			$AnimationTree.set("parameters/OneShot/active", true)
