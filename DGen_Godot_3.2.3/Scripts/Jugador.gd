@@ -16,6 +16,7 @@ var player_mesh: Spatial
 var space_state: PhysicsDirectSpaceState
 var mouse_at_x: float
 var mouse_at_z: float
+var new_spring_length: float = 12
 
 func _ready():
 	player_mesh = $Mesh
@@ -36,9 +37,29 @@ func _input(event):
 			if(result):
 				mouse_at_x = result.position.x
 				mouse_at_z = result.position.z
-				player_mesh.look_at(Vector3(result.position.x, -.815, result.position.z), Vector3(0,1,0))
+				player_mesh.look_at(Vector3(result.position.x, translation.y, result.position.z), Vector3(0,1,0))
+	if event is InputEventMouseButton:
+		event as InputEventMouseButton
+		if event.pressed:
+			match event.button_index:
+				BUTTON_WHEEL_UP:
+					new_spring_length-=1
+					if new_spring_length < 2:
+						new_spring_length = 2
+				BUTTON_WHEEL_DOWN: 
+					new_spring_length+=1
+					if new_spring_length > 22:
+						new_spring_length = 22
 
+#	if Input.is_mouse_button_pressed(1):
+#		springArm.spring_length-=delta
+#		print(springArm.spring_length)
+#	if Input.is_mouse_button_pressed(5):
+#		springArm.spring_length+=delta
+#		print(springArm.spring_length)
 func _physics_process(delta):
+	if (springArm.spring_length-new_spring_length):
+		springArm.spring_length+=(new_spring_length-springArm.spring_length)*delta
 	
 	direction = Vector3(Input.get_action_strength("strafe_right")-Input.get_action_strength("strafe_left"),
 						0,
@@ -69,6 +90,7 @@ func _physics_process(delta):
 			last_dash_time = OS.get_ticks_msec()
 			can_dash = false
 	
+		
 	var mouse = Vector2(mouse_at_x, mouse_at_z).normalized()
 	var rotation = -(Vector2(0,-1).angle_to(mouse))
 	var anim_value = (Vector2(direction.x, direction.z).rotated(rotation)*Vector2(1,-1))

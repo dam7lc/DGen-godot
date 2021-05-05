@@ -91,7 +91,7 @@ script = ExtResource( 2 )
 
 [node name="SpringArm" type="SpringArm" parent="Player"]
 transform = Transform( 1, 0, 0, 0, 0.642787, 0.766044, 0, -0.766044, 0.642787, 0, 1, 0 )
-spring_length = 10.0
+spring_length = 12.0
 
 [node name="Camera" type="Camera" parent="Player/SpringArm"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0222187, -0.00304699, 20.0053 )
