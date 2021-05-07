@@ -1,6 +1,6 @@
 extends Spatial
 
-const cuantos: int = 1
+const cuantos: int = 10
 var room_center: Vector2 = Vector2(0,0)
 var room_x: float
 var prev_room_x: float = 0
@@ -13,7 +13,7 @@ var piso_material
 var ancho_pared: float = .1
 var prev_habitacion: Spatial
 var lado:int
-
+var prev_lado: int
 #Llamado cuando se inicializa el objeto
 func _ready():
 	#Obtener referencia al player para ignorar colision de la camara con paredes
@@ -35,117 +35,125 @@ func _ready():
 		
 		#Sumar el tamaño de habitacion en las habitaciones posteriores a la primera
 		if j != 0:
-			randomize()
-			lado = randi() % 4 
-			print(lado)
-#			lado = 0
+			if j%2 == 0:
+				var randomizar: bool = true
+				while(randomizar):
+					randomize()
+					lado = randi() % 4 
+					if(prev_lado == 0 && lado == 1):
+						randomizar = true
+					elif prev_lado == 1 && lado == 0:
+						randomizar = true
+					elif prev_lado == 2 && lado == 3:
+						randomizar = true
+					elif prev_lado == 3 && lado == 2:
+						randomizar = true
+					else:
+						randomizar = false
+						
 			if lado == 0: #Izquierda
-				if j == 1:
-					prev_habitacion.rotate_y(3.14)
 				room_center.x = room_center.x - room_x - prev_room_x
 			elif lado == 1: #Derecha
 				room_center.x = room_center.x + room_x + prev_room_x
 			elif lado == 2: #Arriba
-				if j == 1:
-					prev_habitacion.rotate_y(1.57)
-				room_center.y = room_center.y - room_x - prev_room_x
+				room_center.y = room_center.y - room_z - prev_room_z
 			elif lado == 3: #Abajo
-				if j == 1:
-					prev_habitacion.rotate_y(-1.57)
-				room_center.y = room_center.y + room_x + prev_room_x
+				room_center.y = room_center.y + room_z + prev_room_z
 				
-			
+				
+		prev_lado = lado	
+		var habitacion: Spatial = crear_habitacion_de_cuatro_paredes()
 		
-		var habitacion: Spatial = Spatial.new()
-		add_child(habitacion)
-		habitacion.global_translate(Vector3(room_center.x,0,room_center.y))
+		#Si el que estamos creando es mayor, cambiar escala de su pared y borrar la pared del anterior
 		
-		#Se crean 3 paredes y un piso y se añaden a escena
-		#Pared DE ARRIBA
-		var pared_superior: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-		pared_superior.set_name("pared_superior")
-		#Tamaño de la pared de arriba
-		pared_superior.set_scale(Vector3(room_x,room_y,ancho_pared))
-		#Posicion de la pared de arriba
-		pared_superior.set_translation(Vector3(0,room_y,-room_z))
-		#Colision de camara ignore la pared superior
-		player.agregar_pared_a_ignorar(pared_superior)
+		#Si el que estamos creando es menor, borrar su pared y cambiar escala del anterior
 		
-		#PARED DE LA IZQUIERDA
-		var pared_izquierda: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-		pared_izquierda.set_name("pared_izquierda")
-		
-		
-
-		if j != 0: #La pared izquierda de la primera habitacion debe ser completa (no entrada)
-			#Tamaño de la pared de la izquierda
-			pared_izquierda.set_scale(Vector3(ancho_pared, room_y, (room_z/2)-.5))
-			#Posicion de la pared de la izquierda
-			pared_izquierda.set_translation(Vector3(-room_x,room_y, (-room_z/2)-.5))
-			#Colision de camara ignore la pared de la izquierda
-			player.agregar_pared_a_ignorar(pared_izquierda)
-			
-			var pared_izquierda2: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-			pared_izquierda2.set_name("pared_izquierda2")
-			#Tamaño de la pared de la izquierda2
-			pared_izquierda2.set_scale(Vector3(ancho_pared,room_y,(room_z/2)-.5))
-			#Posicion de la pared de la izquierda2
-			pared_izquierda2.set_translation(Vector3(-room_x,room_y,(room_z/2)+.5))
-			#Colision de camara ignore la pared de la izquierda2
-			player.agregar_pared_a_ignorar(pared_izquierda2)
-			
-			var puerta = load("res://Escenas/puerta.tscn").instance()
-			habitacion.add_child(puerta)
-			puerta.rotate_y(1.57)
-			puerta.set_translation(Vector3(-room_x,0.3,0))
-			puerta.set_name("puerta")
-			
-		else:
-			#Tamaño de la pared de la izquierda
-			pared_izquierda.set_scale(Vector3(ancho_pared,room_y,room_z))
-			#Posicion de la pared de la izquierda
-			pared_izquierda.set_translation(Vector3(-room_x,room_y,0))
-			#Colision de camara ignore la pared de la izquierda
-			player.agregar_pared_a_ignorar(pared_izquierda)
-		
-		var pared_inferior: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-		pared_inferior.set_name("pared_inferior")	
-		#Tamaño de la pared de abajo
-		pared_inferior.set_scale(Vector3(room_x,room_y,ancho_pared))
-		#Posicion pared de abajo
-		pared_inferior.set_translation(Vector3(0,room_y,room_z))
-		#Colision de camara ignore la pared de abajo
-		player.agregar_pared_a_ignorar(pared_inferior)
-
-		var piso: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-		piso.set_name("piso")
-		#Tamaño del piso
-		piso.set_scale(Vector3(room_x,ancho_pared,room_z))
-		#Posicion del piso
-		piso.set_translation(Vector3(0,ancho_pared,0))
-		#Asignar material al piso
-		piso.get_child(0).set_surface_material(0, piso_material)
-
-		#Si es el ultimo cuarto generar pared de la derecha y no generar puerta
-		if j == (cuantos-1):
-			var pared_derecha: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-			#Tamaño pared de la derecha
-			pared_derecha.set_scale(Vector3(ancho_pared, room_y, room_z))
-			#Posicion de la pared de la derecha
-			pared_derecha.set_translation(Vector3(room_x,room_y,0))
-			#Colision de camara ignore la pared de la derecha
-			player.agregar_pared_a_ignorar(pared_derecha)
 			
 		if j != 0:
-			if lado == 0:
-				habitacion.rotate_y(3.14)
-			elif lado == 2:
-				habitacion.rotate_y(1.57)
-			elif lado == 3:	
-				habitacion.rotate_y(-1.57)
-			
-		prev_room_x = room_x
-		prev_room_z = room_z
+			if lado == 0: #Izquierda
+				if room_z > prev_room_z:
+					prev_habitacion.get_node("pared_izquierda").queue_free()
+					habitacion.get_node("pared_derecha").set_scale(Vector3(ancho_pared, room_y, (room_z/2)-.5))
+					habitacion.get_node("pared_derecha").global_translate(Vector3(0,0,(room_z/2)+.5))
+					var pared2 = crear_pared_y_meter_a_escena(habitacion)
+					pared2.set_name("pared_derecha2")
+					pared2.set_scale(Vector3(ancho_pared, room_y, (room_z/2)-.5))
+					pared2.global_translate(Vector3(room_x,room_y,-(room_z/2)-.5))
+					
+				else:
+					habitacion.get_node("pared_derecha").queue_free()
+					prev_habitacion.get_node("pared_izquierda").set_scale(Vector3(ancho_pared, room_y, (prev_room_z/2)-.5))
+					prev_habitacion.get_node("pared_izquierda").global_translate(Vector3(0,0,(prev_room_z/2)+.5))
+					var pared2 = crear_pared_y_meter_a_escena(prev_habitacion)
+					pared2.set_name("pared_izquierda2")
+					pared2.set_scale(Vector3(ancho_pared, room_y, (prev_room_z/2)-.5))
+					pared2.global_translate(Vector3(-prev_room_x,room_y,-(prev_room_z/2)-.5))
+				prev_room_x = room_x
+				prev_room_z = room_z
+			elif lado == 1: #Derecha
+				if room_z > prev_room_z:
+					prev_habitacion.get_node("pared_derecha").queue_free()
+					habitacion.get_node("pared_izquierda").set_scale(Vector3(ancho_pared, room_y, (room_z/2)-.5))
+					habitacion.get_node("pared_izquierda").global_translate(Vector3(0,0,(room_z/2)+.5))
+					var pared2 = crear_pared_y_meter_a_escena(habitacion)
+					pared2.set_name("pared_izquierda2")
+					pared2.set_scale(Vector3(ancho_pared, room_y, (room_z/2)-.5))
+					pared2.global_translate(Vector3(-room_x,room_y,-(room_z/2)-.5))
+					
+				else:
+					habitacion.get_node("pared_izquierda").queue_free()
+					prev_habitacion.get_node("pared_derecha").set_scale(Vector3(ancho_pared, room_y, (prev_room_z/2)-.5))
+					prev_habitacion.get_node("pared_derecha").global_translate(Vector3(0,0,(prev_room_z/2)+.5))
+					var pared2 = crear_pared_y_meter_a_escena(prev_habitacion)
+					pared2.set_name("pared_derecha2")
+					pared2.set_scale(Vector3(ancho_pared, room_y, (prev_room_z/2)-.5))
+					pared2.global_translate(Vector3(prev_room_x,room_y,-(prev_room_z/2)-.5))
+				prev_room_x = room_x
+				prev_room_z = room_z
+			elif lado == 2: #Arriba
+				if room_x > prev_room_x:
+					prev_habitacion.get_node("pared_superior").queue_free()
+					habitacion.get_node("pared_inferior").set_scale(Vector3((room_x/2)-.5, room_y, ancho_pared))
+					habitacion.get_node("pared_inferior").global_translate(Vector3((room_x/2)+.5,0,0))
+					var pared2 = crear_pared_y_meter_a_escena(habitacion)
+					pared2.set_name("pared_inferior2")
+					pared2.set_scale(Vector3((room_x/2)-.5, room_y, ancho_pared))
+					pared2.global_translate(Vector3(-(room_x/2)-.5,room_y,room_z))
+					
+				else:
+					habitacion.get_node("pared_inferior").queue_free()
+					prev_habitacion.get_node("pared_superior").set_scale(Vector3((prev_room_x/2)-.5, room_y, ancho_pared))
+					prev_habitacion.get_node("pared_superior").global_translate(Vector3((prev_room_x/2)+.5,0,0))
+					var pared2 = crear_pared_y_meter_a_escena(prev_habitacion)
+					pared2.set_name("pared_superior2")
+					pared2.set_scale(Vector3((prev_room_x/2)-.5, room_y, ancho_pared))
+					pared2.global_translate(Vector3(-(prev_room_x/2)-.5,room_y,-prev_room_z))
+				prev_room_x = room_x
+				prev_room_z = room_z
+			elif lado == 3: #Abajo
+				if room_x > prev_room_x:
+					prev_habitacion.get_node("pared_inferior").queue_free()
+					habitacion.get_node("pared_superior").set_scale(Vector3((room_x/2)-.5, room_y, ancho_pared))
+					habitacion.get_node("pared_superior").global_translate(Vector3((room_x/2)+.5,0,0))
+					var pared2 = crear_pared_y_meter_a_escena(habitacion)
+					pared2.set_name("pared_superior2")
+					pared2.set_scale(Vector3((room_x/2)-.5, room_y, ancho_pared))
+					pared2.global_translate(Vector3(-(room_x/2)-.5,room_y,-room_z))
+					
+				else:
+					habitacion.get_node("pared_superior").queue_free()
+					prev_habitacion.get_node("pared_inferior").set_scale(Vector3((prev_room_x/2)-.5, room_y, ancho_pared))
+					prev_habitacion.get_node("pared_inferior").global_translate(Vector3((prev_room_x/2)+.5,0,0))
+					var pared2 = crear_pared_y_meter_a_escena(prev_habitacion)
+					pared2.set_name("pared_inferior2")
+					pared2.set_scale(Vector3((prev_room_x/2)-.5, room_y, ancho_pared))
+					pared2.global_translate(Vector3(-(prev_room_x/2)-.5,room_y,prev_room_z))
+				prev_room_x = room_x
+				prev_room_z = room_z
+		else:
+			prev_room_x = room_x
+			prev_room_z = room_z
+		
 		prev_habitacion = habitacion
 
 	player.generacion_finalizada()
@@ -184,11 +192,59 @@ func agregar_area_pared_inferior(pared_inferior: StaticBody):
 	pared_inferior.set_script(load("res://Scripts/Area_pared_inferior.gd"))
 	pared_inferior.area_added()
 
-func agregar_paredes_relleno(dif: float, habitacion: Spatial):
-	var paredrelleno1: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-	paredrelleno1.set_scale(Vector3(ancho_pared,room_y,dif/2))
-	paredrelleno1.global_translate(Vector3(-room_x,room_y,room_z+(dif/2)))
+func crear_habitacion_de_cuatro_paredes():
+	var habitacion: Spatial = Spatial.new()
+	add_child(habitacion)
+	habitacion.global_translate(Vector3(room_center.x,0,room_center.y))
+	
+	#Se crean 3 paredes y un piso y se añaden a escena
+	#Pared DE ARRIBA
+	var pared_superior: StaticBody = crear_pared_y_meter_a_escena(habitacion)
+	pared_superior.set_name("pared_superior")
+	#Tamaño de la pared de arriba
+	pared_superior.set_scale(Vector3(room_x,room_y,ancho_pared))
+	#Posicion de la pared de arriba
+	pared_superior.set_translation(Vector3(0,room_y,-room_z))
+	#Colision de camara ignore la pared superior
+	player.agregar_pared_a_ignorar(pared_superior)
+	
+	#PARED DE LA IZQUIERDA
+	var pared_izquierda: StaticBody = crear_pared_y_meter_a_escena(habitacion)
+	pared_izquierda.set_name("pared_izquierda")
+	
+	#Tamaño de la pared de la izquierda
+	pared_izquierda.set_scale(Vector3(ancho_pared,room_y,room_z))
+	#Posicion de la pared de la izquierda
+	pared_izquierda.set_translation(Vector3(-room_x,room_y,0))
+	#Colision de camara ignore la pared de la izquierda
+	player.agregar_pared_a_ignorar(pared_izquierda)
+	
+	var pared_inferior: StaticBody = crear_pared_y_meter_a_escena(habitacion)
+	pared_inferior.set_name("pared_inferior")	
+	#Tamaño de la pared de abajo
+	pared_inferior.set_scale(Vector3(room_x,room_y,ancho_pared))
+	#Posicion pared de abajo
+	pared_inferior.set_translation(Vector3(0,room_y,room_z))
+	#Colision de camara ignore la pared de abajo
+	player.agregar_pared_a_ignorar(pared_inferior)
 
-	var paredrelleno2: StaticBody = crear_pared_y_meter_a_escena(habitacion)
-	paredrelleno2.set_scale(Vector3(ancho_pared,room_y,dif/2))
-	paredrelleno2.global_translate(Vector3(-room_x,room_y,-room_z-(dif/2)))
+	var piso: StaticBody = crear_pared_y_meter_a_escena(habitacion)
+	piso.set_name("piso")
+	#Tamaño del piso
+	piso.set_scale(Vector3(room_x,ancho_pared,room_z))
+	#Posicion del piso
+	piso.set_translation(Vector3(0,ancho_pared,0))
+	#Asignar material al piso
+	piso.get_child(0).set_surface_material(0, piso_material)
+
+	
+	var pared_derecha: StaticBody = crear_pared_y_meter_a_escena(habitacion)
+	pared_derecha.set_name("pared_derecha")
+	#Tamaño pared de la derecha
+	pared_derecha.set_scale(Vector3(ancho_pared, room_y, room_z))
+	#Posicion de la pared de la derecha
+	pared_derecha.set_translation(Vector3(room_x,room_y,0))
+	#Colision de camara ignore la pared de la derecha
+	player.agregar_pared_a_ignorar(pared_derecha)
+	
+	return habitacion

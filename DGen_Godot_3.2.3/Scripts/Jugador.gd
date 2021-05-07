@@ -48,8 +48,8 @@ func _input(event):
 						new_spring_length = 2
 				BUTTON_WHEEL_DOWN: 
 					new_spring_length+=1
-					if new_spring_length > 22:
-						new_spring_length = 22
+					if new_spring_length > 50:
+						new_spring_length = 50
 
 #	if Input.is_mouse_button_pressed(1):
 #		springArm.spring_length-=delta
