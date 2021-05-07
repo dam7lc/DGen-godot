@@ -81,7 +81,7 @@ nodes/Direction/position = Vector2( 40, 160 )
 nodes/OneShot/node = SubResource( 14 )
 nodes/OneShot/position = Vector2( 360, 160 )
 nodes/output/position = Vector2( 600, 180 )
-node_connections = [ "OneShot", 0, "Direction", "OneShot", 1, "Animation", "output", 0, "OneShot" ]
+node_connections = [ "output", 0, "OneShot", "OneShot", 0, "Direction", "OneShot", 1, "Animation" ]
 
 [node name="Plano" type="Spatial"]
 
