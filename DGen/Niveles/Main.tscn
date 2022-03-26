@@ -1,0 +1,140 @@
+[gd_scene load_steps=29 format=3 uid="uid://csasyj0w1xvyg"]
+
+[ext_resource type="Animation" path="res://Animaciones/RunLeft-loop.anim" id="1"]
+[ext_resource type="Script" path="res://Scripts/Jugador.gd" id="2"]
+[ext_resource type="Script" path="res://Scripts/ScriptGenerador.gd" id="3"]
+[ext_resource type="Animation" path="res://Animaciones/FrontRoll.anim" id="4"]
+[ext_resource type="Animation" path="res://Animaciones/RunForwardRight-loop.anim" id="5"]
+[ext_resource type="PackedScene" path="res://Escenas/M_Player_Armor1.tscn" id="6"]
+[ext_resource type="Animation" path="res://Animaciones/RunRight-loop.anim" id="7"]
+[ext_resource type="Animation" path="res://Animaciones/RunForward-loop.anim" id="8"]
+[ext_resource type="Animation" path="res://Animaciones/RunForwardLeft-loop.anim" id="9"]
+[ext_resource type="Animation" path="res://Animaciones/RunBackwardsLeft-loop.anim" id="10"]
+[ext_resource type="Animation" path="res://Animaciones/RunBackwardsRight-loop.anim" id="11"]
+[ext_resource type="Animation" path="res://Animaciones/Idle-loop.anim" id="12"]
+[ext_resource type="Animation" path="res://Animaciones/RunBackwards-loop.anim" id="13"]
+
+[sub_resource type="BoxShape3D" id="1"]
+size = Vector3(0.5, 1.6, 0.4)
+
+[sub_resource type="BoxShape3D" id="2"]
+size = Vector3(200, 2, 200)
+
+[sub_resource type="AnimationNodeAnimation" id="3"]
+animation = &"FrontRoll"
+
+[sub_resource type="AnimationNodeAnimation" id="4"]
+animation = &"Idle-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="5"]
+animation = &"RunForward-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="6"]
+animation = &"RunLeft-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="7"]
+animation = &"RunRight-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="8"]
+animation = &"RunBackwards-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="9"]
+animation = &"RunForwardRight-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="10"]
+animation = &"RunForwardLeft-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="11"]
+animation = &"RunBackwardsLeft-loop"
+
+[sub_resource type="AnimationNodeAnimation" id="12"]
+animation = &"RunBackwardsRight-loop"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id="13"]
+blend_point_0/node = SubResource( "4" )
+blend_point_0/pos = Vector2(0, 0)
+blend_point_1/node = SubResource( "5" )
+blend_point_1/pos = Vector2(0, 1)
+blend_point_2/node = SubResource( "6" )
+blend_point_2/pos = Vector2(-1, 0)
+blend_point_3/node = SubResource( "7" )
+blend_point_3/pos = Vector2(1, 0)
+blend_point_4/node = SubResource( "8" )
+blend_point_4/pos = Vector2(0, -1)
+blend_point_5/node = SubResource( "9" )
+blend_point_5/pos = Vector2(1, 1)
+blend_point_6/node = SubResource( "10" )
+blend_point_6/pos = Vector2(-1, 1)
+blend_point_7/node = SubResource( "11" )
+blend_point_7/pos = Vector2(-1, -1)
+blend_point_8/node = SubResource( "12" )
+blend_point_8/pos = Vector2(1, -1)
+
+[sub_resource type="AnimationNodeOneShot" id="14"]
+
+[sub_resource type="AnimationNodeBlendTree" id="15"]
+graph_offset = Vector2(-263, 138)
+nodes/Animation/node = SubResource( "3" )
+nodes/Animation/position = Vector2(180, 340)
+nodes/Direction/node = SubResource( "13" )
+nodes/Direction/position = Vector2(40, 160)
+nodes/OneShot/node = SubResource( "14" )
+nodes/OneShot/position = Vector2(360, 160)
+nodes/output/position = Vector2(600, 180)
+node_connections = [&"output", 0, &"OneShot", &"OneShot", 0, &"Direction", &"OneShot", 1, &"Animation"]
+
+[node name="Plano" type="Node3D"]
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.30723, 0)
+script = ExtResource( "2" )
+
+[node name="SpringArm" type="SpringArm3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0.642787, 0.766044, 0, -0.766044, 0.642787, 0, 1, 0)
+spring_length = 12.0
+
+[node name="Camera" type="Camera3D" parent="Player/SpringArm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0222187, -0.00304699, 20.0053)
+current = true
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.815234, 0)
+shape = SubResource( "1" )
+
+[node name="Area" type="Area3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.419696, 0)
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Player/Area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource( "2" )
+
+[node name="Mesh" parent="Player" instance=ExtResource( "6" )]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
+root_node = NodePath("../Mesh")
+anims/FrontRoll = ExtResource( "4" )
+anims/Idle-loop = ExtResource( "12" )
+anims/RunBackwards-loop = ExtResource( "13" )
+anims/RunBackwardsLeft-loop = ExtResource( "10" )
+anims/RunBackwardsRight-loop = ExtResource( "11" )
+anims/RunForward-loop = ExtResource( "8" )
+anims/RunForwardLeft-loop = ExtResource( "9" )
+anims/RunForwardRight-loop = ExtResource( "5" )
+anims/RunLeft-loop = ExtResource( "1" )
+anims/RunRight-loop = ExtResource( "7" )
+
+[node name="AnimationTree" type="AnimationTree" parent="Player"]
+tree_root = SubResource( "15" )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/Direction/blend_position = Vector2(0, -0.0258621)
+parameters/OneShot/active = false
+
+[node name="DirectionalLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.146288, -0.963126, 0.225804, -0.691553, 0.262784, 0.67283, -0.707358, -0.0577288, -0.704494, 0, 0, 0.827265)
+light_energy = 0.66
+shadow_enabled = true
+
+[node name="Generador" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+script = ExtResource( "3" )
